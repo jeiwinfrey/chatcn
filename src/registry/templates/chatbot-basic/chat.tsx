@@ -4,6 +4,7 @@ import { useChat } from "@/hooks/use-chat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { MarkdownContent } from "@/components/markdown-content";
 
 export function Chat() {
   const systemPrompt = "__SYSTEM_PROMPT__";
@@ -41,10 +42,17 @@ export function Chat() {
                     : "bg-muted"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <MarkdownContent content={message.content} />
               </div>
             </div>
           ))}
+          {isLoading && messages[messages.length - 1]?.role === "user" && (
+            <div className="flex justify-start">
+              <div className="rounded-lg border bg-muted px-4 py-2 text-sm text-muted-foreground">
+                Assistant is typing...
+              </div>
+            </div>
+          )}
         </div>
       </ScrollArea>
 

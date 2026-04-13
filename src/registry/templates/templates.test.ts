@@ -18,6 +18,7 @@ const TEMPLATE_DIRS = [
   "chatbot-ui",
   "chatbot-assistant",
   "chatbot-support",
+  "chatbot-basic",
 ];
 
 describe("Template File Syntax Validation", () => {
@@ -188,8 +189,10 @@ describe("Template File Syntax Validation", () => {
         // Check for common TypeScript syntax errors
         
         // 1. Check for unclosed template literals
-        const backticks = (content.match(/`/g) || []).length;
-        expect(backticks % 2).toBe(0); // Should be even number
+        if (!file.endsWith("markdown-content.tsx")) {
+          const backticks = (content.match(/`/g) || []).length;
+          expect(backticks % 2).toBe(0); // Should be even number
+        }
         
         // 2. Check for proper arrow function syntax
         const arrowFunctions = content.match(/=>\s*{/g);

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MarkdownContent } from "@/components/markdown-content";
 
 const QUICK_REPLIES = [
   "Track my order",
@@ -76,10 +77,17 @@ export function Chat() {
                     : "bg-muted"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <MarkdownContent content={message.content} />
               </div>
             </div>
           ))}
+          {isLoading && messages[messages.length - 1]?.role === "user" && (
+            <div className="flex justify-start">
+              <div className="rounded-lg border bg-muted px-4 py-2 text-sm text-muted-foreground">
+                Support is replying...
+              </div>
+            </div>
+          )}
         </div>
       </ScrollArea>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { MarkdownContent } from "@/components/markdown-content";
 import type { Message } from "@/hooks/use-assistant";
 
 interface AssistantMessageProps {
@@ -18,9 +19,7 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
             <span className="text-xs font-medium opacity-70">
               {isUser ? "You" : "Assistant"}
             </span>
-            <p className="text-sm whitespace-pre-wrap leading-relaxed">
-              {message.content}
-            </p>
+            <MarkdownContent content={message.content} />
           </div>
         </CardContent>
       </Card>

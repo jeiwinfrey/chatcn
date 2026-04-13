@@ -11,6 +11,11 @@
           "type": "ui"
         },
         {
+          "path": "{{components}}/markdown-content.tsx",
+          "from": "templates/chatbot-basic/markdown-content.tsx",
+          "type": "ui"
+        },
+        {
           "path": "{{hooks}}/use-chat.ts",
           "from": "templates/chatbot-basic/use-chat.ts",
           "type": "hook"
@@ -31,6 +36,11 @@
         {
           "path": "{{components}}/chat-message.tsx",
           "from": "templates/chatbot-ui/chat-message.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{components}}/markdown-content.tsx",
+          "from": "templates/chatbot-ui/markdown-content.tsx",
           "type": "ui"
         },
         {
@@ -57,6 +67,11 @@
           "type": "ui"
         },
         {
+          "path": "{{components}}/markdown-content.tsx",
+          "from": "templates/chatbot-assistant/markdown-content.tsx",
+          "type": "ui"
+        },
+        {
           "path": "{{hooks}}/use-assistant.ts",
           "from": "templates/chatbot-assistant/use-assistant.ts",
           "type": "hook"
@@ -72,6 +87,11 @@
         {
           "path": "{{components}}/support-chat.tsx",
           "from": "templates/chatbot-support/support-chat.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{components}}/markdown-content.tsx",
+          "from": "templates/chatbot-support/markdown-content.tsx",
           "type": "ui"
         },
         {

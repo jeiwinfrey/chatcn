@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { MarkdownContent } from "@/components/markdown-content";
 import type { Message } from "@/hooks/use-chat";
 
 interface ChatMessageProps {
@@ -21,9 +22,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         </Avatar>
         <Card className={isUser ? "bg-primary text-primary-foreground" : "bg-muted"}>
           <CardContent className="p-3">
-            <p className="text-sm whitespace-pre-wrap leading-relaxed">
-              {message.content}
-            </p>
+            <MarkdownContent content={message.content} />
           </CardContent>
         </Card>
       </div>
