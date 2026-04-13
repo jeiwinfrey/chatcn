@@ -92,12 +92,14 @@ export function useAssistant(options: UseAssistantOptions = {}): UseAssistantRet
 
       if (!response.ok) {
         let message = `HTTP ${response.status}`;
-        const errorResponse = response.clone();
         try {
-          const payload = (await errorResponse.json()) as { error?: string };
-          if (payload?.error) message = payload.error;
+          const errorBody = await response.clone().text();
+          if (errorBody.trim()) {
+            const payload = JSON.parse(errorBody) as { error?: string };
+            message = payload?.error?.trim() || errorBody;
+          }
         } catch {
-          const text = await errorResponse.text();
+          const text = await response.clone().text();
           if (text.trim()) message = text;
         }
         throw new Error(message);
