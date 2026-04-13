@@ -138,4 +138,36 @@ describe("handleAdd", () => {
     expect(mockExit).not.toHaveBeenCalled();
     mockExit.mockRestore();
   });
+
+  it("should exit when the detected framework cannot generate an API route", async () => {
+    writeFileSync(
+      join(testDir, "package.json"),
+      JSON.stringify({
+        name: "test-project",
+        dependencies: {
+          react: "^18.0.0",
+        },
+        devDependencies: {
+          vite: "^5.0.0",
+        },
+      }),
+      "utf8"
+    );
+
+    const mockExit = vi.spyOn(process, "exit").mockImplementation(() => {
+      throw new Error("process.exit called");
+    });
+
+    await expect(
+      handleAdd({
+        cwd: testDir,
+        yes: true,
+        template: "chatbot-basic",
+        provider: "openai",
+      })
+    ).rejects.toThrow("process.exit called");
+
+    expect(mockExit).toHaveBeenCalledWith(1);
+    mockExit.mockRestore();
+  });
 });

@@ -216,6 +216,54 @@ describe("api-generator e2e - framework-specific generation", () => {
     });
   });
 
+  describe("Astro", () => {
+    it("should generate API route at correct path", async () => {
+      const context: PathContext = {
+        framework: "astro",
+        shadcnConfig: {
+          componentsPath: "src/components",
+          libPath: "src/lib",
+          aliases: {
+            components: "@/components",
+            utils: "@/lib/utils",
+          },
+        },
+        cwd: testDir,
+      };
+
+      const result = await generateApiRoute("astro", context, false);
+
+      const expectedPath = join(testDir, "src", "pages", "api", "chat.ts");
+      expect(result.status).toBe("written");
+      expect(result.path).toBe(expectedPath);
+      expect(existsSync(expectedPath)).toBe(true);
+    });
+  });
+
+  describe("TanStack Start", () => {
+    it("should generate API route at correct path", async () => {
+      const context: PathContext = {
+        framework: "tanstack-start",
+        shadcnConfig: {
+          componentsPath: "src/components",
+          libPath: "src/lib",
+          aliases: {
+            components: "@/components",
+            utils: "@/lib/utils",
+          },
+        },
+        cwd: testDir,
+      };
+
+      const result = await generateApiRoute("tanstack-start", context, false);
+
+      const expectedPath = join(testDir, "src", "routes", "api", "chat.ts");
+      expect(result.status).toBe("written");
+      expect(result.path).toBe(expectedPath);
+      expect(existsSync(expectedPath)).toBe(true);
+    });
+  });
+
   describe("Path Resolution", () => {
     it("should resolve Next.js paths correctly", async () => {
       const context: PathContext = {
@@ -288,6 +336,48 @@ describe("api-generator e2e - framework-specific generation", () => {
       const expectedPath = join(testDir, "app", "routes", "api.chat.ts");
       expect(result.path).toBe(expectedPath);
       expect(existsSync(expectedPath)).toBe(true);
+    });
+
+    it("should resolve Astro paths correctly", async () => {
+      const context: PathContext = {
+        framework: "astro",
+        shadcnConfig: {
+          componentsPath: "src/components",
+          libPath: "src/lib",
+          aliases: {
+            components: "@/components",
+            utils: "@/lib/utils",
+          },
+        },
+        cwd: testDir,
+      };
+
+      const result = await generateApiRoute("astro", context, false);
+      const expectedPath = join(testDir, "src", "pages", "api", "chat.ts");
+
+      expect(result.path).toBe(expectedPath);
+      expect(existsSync(join(testDir, "src", "pages", "api"))).toBe(true);
+    });
+
+    it("should resolve TanStack Start paths correctly", async () => {
+      const context: PathContext = {
+        framework: "tanstack-start",
+        shadcnConfig: {
+          componentsPath: "src/components",
+          libPath: "src/lib",
+          aliases: {
+            components: "@/components",
+            utils: "@/lib/utils",
+          },
+        },
+        cwd: testDir,
+      };
+
+      const result = await generateApiRoute("tanstack-start", context, false);
+      const expectedPath = join(testDir, "src", "routes", "api", "chat.ts");
+
+      expect(result.path).toBe(expectedPath);
+      expect(existsSync(join(testDir, "src", "routes", "api"))).toBe(true);
     });
 
     it("should handle custom cwd paths correctly", async () => {
@@ -414,6 +504,54 @@ describe("api-generator e2e - framework-specific generation", () => {
       expect(content).toContain("catch (error)");
       expect(content).toContain("console.error");
       expect(content).toContain("Response.json({ error: message }, { status: 500 })");
+    });
+
+    it("should use Astro-specific endpoint pattern", async () => {
+      const context: PathContext = {
+        framework: "astro",
+        shadcnConfig: {
+          componentsPath: "src/components",
+          libPath: "src/lib",
+          aliases: {
+            components: "@/components",
+            utils: "@/lib/utils",
+          },
+        },
+        cwd: testDir,
+      };
+
+      await generateApiRoute("astro", context, false);
+
+      const filePath = join(testDir, "src", "pages", "api", "chat.ts");
+      const content = readFileSync(filePath, "utf8");
+
+      expect(content).toContain("import type { APIRoute } from 'astro'");
+      expect(content).toContain("export const POST: APIRoute");
+      expect(content).toContain("TextEncoderStream");
+    });
+
+    it("should use TanStack Start server handler pattern", async () => {
+      const context: PathContext = {
+        framework: "tanstack-start",
+        shadcnConfig: {
+          componentsPath: "src/components",
+          libPath: "src/lib",
+          aliases: {
+            components: "@/components",
+            utils: "@/lib/utils",
+          },
+        },
+        cwd: testDir,
+      };
+
+      await generateApiRoute("tanstack-start", context, false);
+
+      const filePath = join(testDir, "src", "routes", "api", "chat.ts");
+      const content = readFileSync(filePath, "utf8");
+
+      expect(content).toContain("createFileRoute('/api/chat')");
+      expect(content).toContain("handlers:");
+      expect(content).toContain("TextEncoderStream");
     });
   });
 });

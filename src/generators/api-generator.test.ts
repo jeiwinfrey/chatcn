@@ -143,6 +143,62 @@ describe("generateApiRoute", () => {
     expect(content).toContain("export async function action");
   });
 
+  it("should generate Astro API route", async () => {
+    const context: PathContext = {
+      framework: "astro",
+      shadcnConfig: {
+        componentsPath: "src/components",
+        libPath: "src/lib",
+        aliases: {
+          components: "@/components",
+          utils: "@/lib/utils",
+        },
+      },
+      cwd: testDir,
+    };
+
+    const result = await generateApiRoute("astro", context, false);
+
+    expect(result.status).toBe("written");
+    expect(result.path).toContain("src/pages/api/chat.ts");
+
+    const writtenPath = join(testDir, "src/pages/api/chat.ts");
+    expect(existsSync(writtenPath)).toBe(true);
+
+    const content = readFileSync(writtenPath, "utf8");
+    expect(content).toContain("import type { APIRoute } from 'astro'");
+    expect(content).toContain("export const POST: APIRoute");
+    expect(content).toContain("await streamChat(body.messages, request.signal)");
+  });
+
+  it("should generate TanStack Start API route", async () => {
+    const context: PathContext = {
+      framework: "tanstack-start",
+      shadcnConfig: {
+        componentsPath: "src/components",
+        libPath: "src/lib",
+        aliases: {
+          components: "@/components",
+          utils: "@/lib/utils",
+        },
+      },
+      cwd: testDir,
+    };
+
+    const result = await generateApiRoute("tanstack-start", context, false);
+
+    expect(result.status).toBe("written");
+    expect(result.path).toContain("src/routes/api/chat.ts");
+
+    const writtenPath = join(testDir, "src/routes/api/chat.ts");
+    expect(existsSync(writtenPath)).toBe(true);
+
+    const content = readFileSync(writtenPath, "utf8");
+    expect(content).toContain("createFileRoute('/api/chat')");
+    expect(content).toContain("handlers:");
+    expect(content).toContain("await streamChat(body.messages, request.signal)");
+  });
+
   it("should skip Vite framework with helpful message", async () => {
     const context: PathContext = {
       framework: "vite",
@@ -225,10 +281,10 @@ describe("generateApiRoute", () => {
 
   it("should skip unsupported frameworks", async () => {
     const context: PathContext = {
-      framework: "astro",
+      framework: "laravel",
       shadcnConfig: {
-        componentsPath: "src/components",
-        libPath: "src/lib",
+        componentsPath: "resources/js/components",
+        libPath: "resources/js/lib",
         aliases: {
           components: "@/components",
           utils: "@/lib/utils",
@@ -237,9 +293,9 @@ describe("generateApiRoute", () => {
       cwd: testDir,
     };
 
-    const result = await generateApiRoute("astro", context, false);
+    const result = await generateApiRoute("laravel", context, false);
 
     expect(result.status).toBe("skipped");
-    expect(result.message).toContain("not supported for framework: astro");
+    expect(result.message).toContain("laravel projects require manual API route setup");
   });
 });

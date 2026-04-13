@@ -11,6 +11,29 @@ export interface GenerationResult {
   message?: string;
 }
 
+export function supportsGeneratedApiRoute(framework: Framework): boolean {
+  return [
+    "next",
+    "remix",
+    "react-router",
+    "astro",
+    "tanstack-start",
+  ].includes(framework);
+}
+
+function formatFrameworkName(framework: Framework): string {
+  switch (framework) {
+    case "vite":
+      return "Vite";
+    case "tanstack-start":
+      return "TanStack Start";
+    case "react-router":
+      return "React Router";
+    default:
+      return framework;
+  }
+}
+
 /**
  * Generates a framework-specific API route for handling chat requests.
  * 
@@ -47,14 +70,24 @@ export async function generateApiRoute(
         template = getRemixTemplate();
         templatePath = "app/routes/api.chat.ts";
         break;
+
+      case "astro":
+        template = getAstroTemplate();
+        templatePath = "src/pages/api/chat.ts";
+        break;
+
+      case "tanstack-start":
+        template = getTanStackStartTemplate();
+        templatePath = "src/routes/api/chat.ts";
+        break;
         
       case "vite":
       case "manual":
-        // Vite requires user prompt for location
+      case "laravel":
         return {
           path: "",
           status: "skipped",
-          message: "Vite projects require manual API route setup. Please create your API endpoint and use the streamChat function from lib/llm.ts",
+          message: `${formatFrameworkName(framework)} projects require manual API route setup. Please create your API endpoint and use the streamChat function from lib/llm.ts`,
         };
         
       default:
@@ -245,5 +278,87 @@ export async function action({ request }: ActionFunctionArgs) {
     return internalError(error);
   }
 }
+`;
+}
+
+function getAstroTemplate(): string {
+  return `import type { APIRoute } from 'astro';
+import { streamChat, type Message } from '@/lib/llm';
+
+function isMessageArray(value: unknown): value is Message[] {
+  return Array.isArray(value) && value.every((item) => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      "role" in item &&
+      "content" in item &&
+      typeof (item as { role?: unknown }).role === "string" &&
+      typeof (item as { content?: unknown }).content === "string"
+    );
+  });
+}
+
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    const body = (await request.json().catch(() => null)) as { messages?: unknown } | null;
+    if (!body || !isMessageArray(body.messages)) {
+      return Response.json({ error: "Request body must include a messages array." }, { status: 400 });
+    }
+
+    const stream = await streamChat(body.messages, request.signal);
+
+    return new Response(stream.pipeThrough(new TextEncoderStream()), {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
+  } catch (error) {
+    console.error('Chat API error:', error);
+    const message = error instanceof Error ? error.message : "Internal Server Error";
+    return Response.json({ error: message }, { status: 500 });
+  }
+};
+`;
+}
+
+function getTanStackStartTemplate(): string {
+  return `import { createFileRoute } from '@tanstack/react-router';
+import { streamChat, type Message } from '@/lib/llm';
+
+function isMessageArray(value: unknown): value is Message[] {
+  return Array.isArray(value) && value.every((item) => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      "role" in item &&
+      "content" in item &&
+      typeof (item as { role?: unknown }).role === "string" &&
+      typeof (item as { content?: unknown }).content === "string"
+    );
+  });
+}
+
+export const Route = createFileRoute('/api/chat')({
+  server: {
+    handlers: {
+      POST: async ({ request }) => {
+        try {
+          const body = (await request.json().catch(() => null)) as { messages?: unknown } | null;
+          if (!body || !isMessageArray(body.messages)) {
+            return Response.json({ error: "Request body must include a messages array." }, { status: 400 });
+          }
+
+          const stream = await streamChat(body.messages, request.signal);
+
+          return new Response(stream.pipeThrough(new TextEncoderStream()), {
+            headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+          });
+        } catch (error) {
+          console.error('Chat API error:', error);
+          const message = error instanceof Error ? error.message : "Internal Server Error";
+          return Response.json({ error: message }, { status: 500 });
+        }
+      },
+    },
+  },
+});
 `;
 }
