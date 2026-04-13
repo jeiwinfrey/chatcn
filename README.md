@@ -13,6 +13,15 @@ Initialize a chatbot in your existing shadcn project:
 npx @jeiwinfrey/chatcn init
 ```
 
+Prefer a different package runner? Use the one that matches your setup:
+
+```bash
+npx @jeiwinfrey/chatcn init
+pnpm dlx @jeiwinfrey/chatcn init
+yarn dlx @jeiwinfrey/chatcn init
+bunx @jeiwinfrey/chatcn init
+```
+
 This will:
 1. Detect your framework and package manager
 2. Let you choose a chatbot template
@@ -141,6 +150,14 @@ Initialize a chatbot with interactive prompts:
 
 ```bash
 npx @jeiwinfrey/chatcn init
+```
+
+Or with other runners:
+
+```bash
+pnpm dlx @jeiwinfrey/chatcn init
+yarn dlx @jeiwinfrey/chatcn init
+bunx @jeiwinfrey/chatcn init
 ```
 
 With flags to skip prompts:
