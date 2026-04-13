@@ -2,7 +2,7 @@
 
 Scaffold production-ready AI chatbot templates into your shadcn project.
 
-- npm: https://www.npmjs.com/package/chatcn
+- npm: https://www.npmjs.com/package/@jeiwinfrey/chatcn
 - GitHub: https://github.com/jeiwinfrey/chatcn
 
 ## Quickstart
@@ -10,7 +10,7 @@ Scaffold production-ready AI chatbot templates into your shadcn project.
 Initialize a chatbot in your existing shadcn project:
 
 ```bash
-npx chatcn init
+npx @jeiwinfrey/chatcn init
 ```
 
 This will:
@@ -82,7 +82,7 @@ chatcn supports 12 AI providers:
 Specify a template without interactive prompt:
 
 ```bash
-npx chatcn init --template chatbot-ui
+npx @jeiwinfrey/chatcn init --template chatbot-ui
 ```
 
 Valid values: `chatbot-basic`, `chatbot-ui`, `chatbot-assistant`, `chatbot-support`, `chatbot-custom`
@@ -92,7 +92,7 @@ Valid values: `chatbot-basic`, `chatbot-ui`, `chatbot-assistant`, `chatbot-suppo
 Specify a provider without interactive prompt:
 
 ```bash
-npx chatcn init --provider openai
+npx @jeiwinfrey/chatcn init --provider openai
 ```
 
 Valid values: `openai`, `anthropic`, `openrouter`, `google`, `aws-bedrock`, `groq`, `together`, `mistral`, `xai`, `deepseek`, `cerebras`, `fireworks`
@@ -102,7 +102,7 @@ Valid values: `openai`, `anthropic`, `openrouter`, `google`, `aws-bedrock`, `gro
 Choose the model to write into `lib/llm.ts` and `AI_MODEL`:
 
 ```bash
-npx chatcn init --provider openai --model gpt-5.1
+npx @jeiwinfrey/chatcn init --provider openai --model gpt-5.1
 ```
 
 If you skip this flag, chatcn uses the provider's recommended default model.
@@ -112,7 +112,7 @@ If you skip this flag, chatcn uses the provider's recommended default model.
 Skip all prompts and use defaults:
 
 ```bash
-npx chatcn init --yes --template chatbot-basic --provider openai --model gpt-5-mini
+npx @jeiwinfrey/chatcn init --yes --template chatbot-basic --provider openai --model gpt-5-mini
 ```
 
 ### --overwrite
@@ -120,7 +120,7 @@ npx chatcn init --yes --template chatbot-basic --provider openai --model gpt-5-m
 Overwrite existing files:
 
 ```bash
-npx chatcn init --overwrite
+npx @jeiwinfrey/chatcn init --overwrite
 ```
 
 By default, chatcn will skip files that already exist to protect your custom code.
@@ -130,7 +130,7 @@ By default, chatcn will skip files that already exist to protect your custom cod
 Target a different directory:
 
 ```bash
-npx chatcn init --cwd ./my-project
+npx @jeiwinfrey/chatcn init --cwd ./my-project
 ```
 
 ## Commands
@@ -140,13 +140,13 @@ npx chatcn init --cwd ./my-project
 Initialize a chatbot with interactive prompts:
 
 ```bash
-npx chatcn init
+npx @jeiwinfrey/chatcn init
 ```
 
 With flags to skip prompts:
 
 ```bash
-npx chatcn init --template chatbot-ui --provider anthropic --yes --model claude-3-5-haiku-latest
+npx @jeiwinfrey/chatcn init --template chatbot-ui --provider anthropic --yes --model claude-3-5-haiku-latest
 ```
 
 ### add
@@ -154,7 +154,7 @@ npx chatcn init --template chatbot-ui --provider anthropic --yes --model claude-
 Add a chatbot template (same as init, but more explicit):
 
 ```bash
-npx chatcn add --template chatbot-assistant --provider openai --model gpt-5-mini
+npx @jeiwinfrey/chatcn add --template chatbot-assistant --provider openai --model gpt-5-mini
 ```
 
 ## Supported Frameworks
@@ -364,25 +364,25 @@ your-project/
 ### Basic chatbot with OpenAI
 
 ```bash
-npx chatcn init --template chatbot-basic --provider openai --yes
+npx @jeiwinfrey/chatcn init --template chatbot-basic --provider openai --yes
 ```
 
 ### Polished UI with Anthropic
 
 ```bash
-npx chatcn init --template chatbot-ui --provider anthropic --yes
+npx @jeiwinfrey/chatcn init --template chatbot-ui --provider anthropic --yes
 ```
 
 ### Support chatbot with Groq
 
 ```bash
-npx chatcn init --template chatbot-support --provider groq --yes
+npx @jeiwinfrey/chatcn init --template chatbot-support --provider groq --yes
 ```
 
 ### Add another template to existing project
 
 ```bash
-npx chatcn add --template chatbot-assistant --provider google --overwrite
+npx @jeiwinfrey/chatcn add --template chatbot-assistant --provider google --overwrite
 ```
 
 ## Troubleshooting

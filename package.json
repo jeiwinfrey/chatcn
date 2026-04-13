@@ -1,5 +1,5 @@
 {
-  "name": "chatcn",
+  "name": "@jeiwinfrey/chatcn",
   "version": "0.1.0",
   "description": "Scaffold AI chatbot templates into your shadcn project",
   "type": "module",
