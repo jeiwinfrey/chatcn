@@ -2,7 +2,7 @@
   "templates": [
     {
       "name": "chatbot-basic",
-      "description": "Minimal chatbot. Input + messages + streaming response.",
+      "description": "Pick this if you are building a simple chatbot and want the smallest starting point.",
       "shadcnDeps": ["button", "input", "scroll-area"],
       "files": [
         {
@@ -20,7 +20,7 @@
     },
     {
       "name": "chatbot-ui",
-      "description": "Polished UI with message bubbles, markdown rendering, and loading states.",
+      "description": "Pick this if you want a polished chatbot UI with message bubbles, markdown, and loading states.",
       "shadcnDeps": ["button", "input", "scroll-area", "card", "avatar", "skeleton"],
       "files": [
         {
@@ -43,7 +43,7 @@
     },
     {
       "name": "chatbot-assistant",
-      "description": "Reusable AI assistant with clean UI / hook / LLM layer separation.",
+      "description": "Pick this if you are building a reusable assistant and want cleaner separation between UI, hook, and LLM logic.",
       "shadcnDeps": ["button", "input", "scroll-area", "card", "separator"],
       "files": [
         {
@@ -66,7 +66,7 @@
     },
     {
       "name": "chatbot-support",
-      "description": "Customer support chatbot with predefined tone and quick-reply chips.",
+      "description": "Pick this if you are building a support or helpdesk chatbot with quick replies and a guided tone.",
       "shadcnDeps": ["button", "input", "scroll-area", "card", "badge"],
       "files": [
         {

@@ -319,7 +319,6 @@ export async function handleInit(options: InitOptions): Promise<void> {
     // 16. Display next steps for user
     printNextSteps({
       cwd,
-      packageManager,
       template,
       provider,
       selectedModel,

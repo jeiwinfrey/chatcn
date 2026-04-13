@@ -31,22 +31,22 @@ npx shadcn@latest init
 chatcn provides 4 chatbot templates:
 
 ### chatbot-basic
-Minimal chatbot with input, messages, and streaming response. Perfect for getting started quickly.
+Pick this if you are building a simple chatbot and want the smallest starting point.
 
 **shadcn components:** button, input, scroll-area
 
 ### chatbot-ui
-Polished UI with message bubbles, markdown rendering, and loading states. Production-ready interface with avatars and skeletons.
+Pick this if you want a polished chatbot UI with message bubbles, markdown, and loading states.
 
 **shadcn components:** button, input, scroll-area, card, avatar, skeleton
 
 ### chatbot-assistant
-Reusable AI assistant with clean UI/hook/LLM layer separation. Ideal for building custom assistants.
+Pick this if you are building a reusable assistant and want cleaner separation between UI, hook, and LLM logic.
 
 **shadcn components:** button, input, scroll-area, card, separator
 
 ### chatbot-support
-Customer support chatbot with predefined tone and quick-reply chips. Optimized for support workflows.
+Pick this if you are building a support or helpdesk chatbot with quick replies and a guided tone.
 
 **shadcn components:** button, input, scroll-area, card, badge
 
