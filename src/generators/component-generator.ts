@@ -11,6 +11,10 @@ export interface GenerationResult {
   message?: string;
 }
 
+export interface ComponentGenerationOptions {
+  systemPrompt?: string;
+}
+
 /**
  * Generates component files for a template by copying UI files from the registry
  * to the resolved destination paths.
@@ -23,18 +27,26 @@ export interface GenerationResult {
 export async function generateComponentFiles(
   template: Template,
   context: PathContext,
-  overwrite: boolean
+  overwrite: boolean,
+  options: ComponentGenerationOptions = {}
 ): Promise<GenerationResult[]> {
   const results: GenerationResult[] = [];
   
   // Filter template files by type === 'ui'
   const componentFiles = template.files.filter((file) => file.type === "ui");
+  const systemPromptReplacement =
+    options.systemPrompt === undefined
+      ? "undefined"
+      : JSON.stringify(options.systemPrompt);
   
   for (const file of componentFiles) {
     try {
       // Read source file from src/registry/templates/{template-name}/{file.from}
       const sourcePath = resolveTemplatePath(file.from);
-      const content = readFileSync(sourcePath, "utf8");
+      const content = readFileSync(sourcePath, "utf8").replaceAll(
+        '"__SYSTEM_PROMPT__"',
+        systemPromptReplacement
+      );
       
       // Resolve destination path using path resolver
       const destinationPath = resolvePath(file.path, context);

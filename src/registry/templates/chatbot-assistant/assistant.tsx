@@ -9,7 +9,10 @@ import { Separator } from "@/components/ui/separator";
 import { AssistantMessage } from "@/components/assistant-message";
 
 export function Assistant() {
-  const { messages, input, setInput, isLoading, sendMessage, stop, error } = useAssistant();
+  const systemPrompt = "__SYSTEM_PROMPT__";
+  const { messages, input, setInput, isLoading, sendMessage, stop, error } = useAssistant({
+    systemPrompt,
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

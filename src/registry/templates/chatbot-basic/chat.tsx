@@ -6,7 +6,10 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function Chat() {
-  const { messages, input, setInput, isLoading, sendMessage, stop, error } = useChat();
+  const systemPrompt = "__SYSTEM_PROMPT__";
+  const { messages, input, setInput, isLoading, sendMessage, stop, error } = useChat({
+    systemPrompt,
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

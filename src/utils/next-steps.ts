@@ -55,24 +55,24 @@ function getComponentImport(template: Template): { componentName: string; import
   }
 }
 
-function getSystemPromptGuide(template: Template): { componentFile: string; hookCall: string } {
+function getSystemPromptGuide(template: Template): { componentFile: string; promptLine: string } {
   switch (template.name) {
     case "chatbot-assistant":
       return {
         componentFile: "./components/assistant.tsx",
-        hookCall: 'useAssistant({ systemPrompt: "You are a helpful assistant." });',
+        promptLine: 'const systemPrompt = "You are a helpful assistant.";',
       };
     case "chatbot-support":
       return {
         componentFile: "./components/support-chat.tsx",
-        hookCall: 'useChat({ systemPrompt: "You are a helpful support agent." });',
+        promptLine: 'const systemPrompt = "You are a helpful support agent.";',
       };
     case "chatbot-basic":
     case "chatbot-ui":
     default:
       return {
         componentFile: "./components/chat.tsx",
-        hookCall: 'useChat({ systemPrompt: "You are a helpful assistant." });',
+        promptLine: 'const systemPrompt = "You are a helpful assistant.";',
       };
   }
 }
@@ -87,7 +87,7 @@ export function printNextSteps(args: {
   const { cwd, template, provider, selectedModel, context } = args;
   const renderTarget = getRenderTarget(cwd, context.framework);
   const { componentName, importLine } = getComponentImport(template);
-  const { componentFile, hookCall } = getSystemPromptGuide(template);
+  const { componentFile, promptLine } = getSystemPromptGuide(template);
 
   console.log("\nNext steps:");
   console.log("1. Copy `.env.example` to `.env.local` (Next.js) or `.env`, then add your API key(s).");
@@ -113,6 +113,6 @@ export function printNextSteps(args: {
   console.log(`3. Optional: open ${componentFile} and change the system prompt.`);
   console.log("   This controls the bot's personality and behavior, and you can skip it for now.");
   console.log("   ```tsx");
-  console.log(`   const { messages, input, setInput, isLoading, sendMessage, stop, error } = ${hookCall}`);
+  console.log(`   ${promptLine}`);
   console.log("   ```");
 }

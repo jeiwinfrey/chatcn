@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { mkdirSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { generateComponentFiles } from "./component-generator.js";
 import type { Template } from "../schema.js";
@@ -163,6 +163,51 @@ describe("generateComponentFiles", () => {
 
     expect(results).toHaveLength(1);
     expect(results[0].status).toBe("written");
+  });
+
+  it("should replace system prompt placeholders when provided", async () => {
+    const sourceContent = `export function TestComponent() {
+  const systemPrompt = "__SYSTEM_PROMPT__";
+  return <div>{systemPrompt}</div>;
+}`;
+    writeTemplateSource("test-component.tsx", sourceContent);
+
+    const template: Template = {
+      name: "test-template",
+      description: "Test template",
+      shadcnDeps: [],
+      files: [
+        {
+          path: "{{components}}/test-component.tsx",
+          from: "templates/test-template/test-component.tsx",
+          type: "ui",
+        },
+      ],
+      requiresBackend: false,
+    };
+
+    const context: PathContext = {
+      framework: "next",
+      shadcnConfig: {
+        componentsPath: "components",
+        libPath: "lib",
+        aliases: {
+          components: "@/components",
+          utils: "@/lib/utils",
+        },
+      },
+      cwd: testDir,
+    };
+
+    const results = await generateComponentFiles(template, context, true, {
+      systemPrompt: "You are a helpful assistant.",
+    });
+
+    expect(results).toHaveLength(1);
+    const writtenPath = join(testDir, "components/test-component.tsx");
+    expect(readFileSync(writtenPath, "utf8")).toContain(
+      'const systemPrompt = "You are a helpful assistant.";'
+    );
   });
 
   it("should return error status when source file is missing", async () => {

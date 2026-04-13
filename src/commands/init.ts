@@ -17,6 +17,7 @@ import { resolvePath } from "../utils/path-resolver.js";
 import { writeFile } from "../utils/write-file.js";
 import { logger } from "../utils/logger.js";
 import { promptModel } from "../prompts/model-prompt.js";
+import { promptSystemPrompt } from "../prompts/system-prompt.js";
 import { printNextSteps } from "../utils/next-steps.js";
 import type { PathContext } from "../utils/path-resolver.js";
 
@@ -150,6 +151,8 @@ export async function handleInit(options: InitOptions): Promise<void> {
         : await promptModel(provider);
     }
 
+    const systemPrompt = options.yes ? undefined : await promptSystemPrompt();
+
     // 7. Identify missing shadcn components
     const missingComponents = template.shadcnDeps.filter((dep) => {
       const componentPath = join(
@@ -223,7 +226,8 @@ export async function handleInit(options: InitOptions): Promise<void> {
     const componentResults = await generateComponentFiles(
       template,
       context,
-      options.overwrite ?? false
+      options.overwrite ?? false,
+      { systemPrompt }
     );
     for (const result of componentResults) {
       if (result.status === "written") {
