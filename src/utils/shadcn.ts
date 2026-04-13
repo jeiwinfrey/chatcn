@@ -112,10 +112,23 @@ export function loadShadcnConfig(cwd: string): ShadcnConfig | null {
     const componentsAlias = aliases.components || "@/components";
     const utilsAlias = aliases.utils || "@/lib/utils";
     
-    // Extract the actual paths from aliases (remove @ prefix and resolve)
-    // shadcn typically uses aliases like "@/components" which maps to "src/components" or "components"
-    const componentsPath = componentsAlias.replace(/^@\//, "");
-    const libPath = utilsAlias.replace(/^@\//, "").replace(/\/utils$/, "");
+    // Try to get the actual resolved paths from the config
+    // shadcn v2+ includes resolvedPaths which has the actual filesystem paths
+    const resolvedPaths = config.resolvedPaths || {};
+    
+    let componentsPath: string;
+    let libPath: string;
+    
+    if (resolvedPaths.components) {
+      // Use resolved paths if available (shadcn v2+)
+      componentsPath = resolvedPaths.components;
+      libPath = resolvedPaths.utils?.replace(/\/utils\.ts$/, "") || resolvedPaths.lib || "lib";
+    } else {
+      // Fall back to extracting from aliases (shadcn v1)
+      // Just remove the @/ prefix - the framework defaults will be used if this doesn't work
+      componentsPath = componentsAlias.replace(/^@\//, "");
+      libPath = utilsAlias.replace(/^@\//, "").replace(/\/utils$/, "");
+    }
     
     return {
       componentsPath,
