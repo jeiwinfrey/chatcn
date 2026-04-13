@@ -1,6 +1,6 @@
 "use client";
 
-import { useChat } from "@/hooks/use-chat";
+import { useChat } from "@/hooks/use-support-chat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
