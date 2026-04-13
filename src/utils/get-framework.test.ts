@@ -134,6 +134,118 @@ describe('getFramework', () => {
     });
   });
 
+  describe('Astro detection', () => {
+    it('should detect Astro when astro is in dependencies', () => {
+      const mockPackageJson = {
+        dependencies: {
+          astro: '^4.0.0',
+        },
+      };
+
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(JSON.stringify(mockPackageJson));
+
+      const result = getFramework('/test/project');
+
+      expect(result).toBe('astro');
+    });
+
+    it('should detect Astro when astro is in devDependencies', () => {
+      const mockPackageJson = {
+        devDependencies: {
+          astro: '^4.0.0',
+        },
+      };
+
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(JSON.stringify(mockPackageJson));
+
+      const result = getFramework('/test/project');
+
+      expect(result).toBe('astro');
+    });
+  });
+
+  describe('TanStack Start detection', () => {
+    it('should detect TanStack Start when @tanstack/start is in dependencies', () => {
+      const mockPackageJson = {
+        dependencies: {
+          '@tanstack/start': '^1.0.0',
+        },
+      };
+
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(JSON.stringify(mockPackageJson));
+
+      const result = getFramework('/test/project');
+
+      expect(result).toBe('tanstack-start');
+    });
+
+    it('should detect TanStack Start when @tanstack/react-start is in dependencies', () => {
+      const mockPackageJson = {
+        dependencies: {
+          '@tanstack/react-start': '^1.0.0',
+        },
+      };
+
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(JSON.stringify(mockPackageJson));
+
+      const result = getFramework('/test/project');
+
+      expect(result).toBe('tanstack-start');
+    });
+  });
+
+  describe('React Router v7 detection', () => {
+    it('should detect React Router v7 when react-router and @react-router/dev are in dependencies', () => {
+      const mockPackageJson = {
+        dependencies: {
+          'react-router': '^7.0.0',
+          '@react-router/dev': '^7.0.0',
+        },
+      };
+
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(JSON.stringify(mockPackageJson));
+
+      const result = getFramework('/test/project');
+
+      expect(result).toBe('react-router');
+    });
+
+    it('should not detect React Router v7 when only react-router is present', () => {
+      const mockPackageJson = {
+        dependencies: {
+          'react-router': '^6.0.0',
+        },
+      };
+
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(JSON.stringify(mockPackageJson));
+
+      const result = getFramework('/test/project');
+
+      expect(result).toBe('manual');
+    });
+
+    it('should not detect React Router v7 when only @react-router/dev is present', () => {
+      const mockPackageJson = {
+        dependencies: {
+          '@react-router/dev': '^7.0.0',
+        },
+      };
+
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(JSON.stringify(mockPackageJson));
+
+      const result = getFramework('/test/project');
+
+      expect(result).toBe('manual');
+    });
+  });
+
   describe('Laravel detection', () => {
     it('should detect Laravel when laravel/framework is in composer.json', () => {
       mockExistsSync.mockImplementation((path) => {
