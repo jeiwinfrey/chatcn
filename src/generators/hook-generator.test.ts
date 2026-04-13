@@ -9,6 +9,11 @@ describe("generateHookFiles", () => {
   const testDir = join(process.cwd(), "test-output-hook-generator");
   const templatesDir = join(process.cwd(), "src/registry/templates/test-template");
 
+  function writeTemplateSource(filename: string, content: string) {
+    mkdirSync(templatesDir, { recursive: true });
+    writeFileSync(join(templatesDir, filename), content, "utf8");
+  }
+
   beforeEach(() => {
     // Create test directories
     mkdirSync(testDir, { recursive: true });
@@ -28,7 +33,7 @@ describe("generateHookFiles", () => {
   it("should generate hook files with type 'hook'", async () => {
     // Create a test template source file
     const sourceContent = "export const useTest = () => { return {}; };";
-    writeFileSync(join(templatesDir, "use-test.ts"), sourceContent, "utf8");
+    writeTemplateSource("use-test.ts", sourceContent);
 
     const template: Template = {
       name: "test-template",
@@ -77,7 +82,7 @@ describe("generateHookFiles", () => {
   it("should skip existing files when overwrite is false", async () => {
     // Create a test template source file
     const sourceContent = "export const useTest = () => { return {}; };";
-    writeFileSync(join(templatesDir, "use-test.ts"), sourceContent, "utf8");
+    writeTemplateSource("use-test.ts", sourceContent);
 
     // Create existing file
     const existingPath = join(testDir, "hooks/use-test.ts");
@@ -120,7 +125,7 @@ describe("generateHookFiles", () => {
   it("should overwrite existing files when overwrite is true", async () => {
     // Create a test template source file
     const sourceContent = "export const useTest = () => { return { new: true }; };";
-    writeFileSync(join(templatesDir, "use-test.ts"), sourceContent, "utf8");
+    writeTemplateSource("use-test.ts", sourceContent);
 
     // Create existing file
     const existingPath = join(testDir, "hooks/use-test.ts");
@@ -232,7 +237,7 @@ describe("generateHookFiles", () => {
     };
 
     // Create only the hook file
-    writeFileSync(join(templatesDir, "use-hook.ts"), "hook content", "utf8");
+    writeTemplateSource("use-hook.ts", "hook content");
 
     const results = await generateHookFiles(template, context, false);
 

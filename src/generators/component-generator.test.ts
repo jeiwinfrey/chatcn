@@ -9,6 +9,11 @@ describe("generateComponentFiles", () => {
   const testDir = join(process.cwd(), "test-output-component-generator");
   const templatesDir = join(process.cwd(), "src/registry/templates/test-template");
 
+  function writeTemplateSource(filename: string, content: string) {
+    mkdirSync(templatesDir, { recursive: true });
+    writeFileSync(join(templatesDir, filename), content, "utf8");
+  }
+
   beforeEach(() => {
     // Create test directories
     mkdirSync(testDir, { recursive: true });
@@ -28,7 +33,7 @@ describe("generateComponentFiles", () => {
   it("should generate component files with type 'ui'", async () => {
     // Create a test template source file
     const sourceContent = "export const TestComponent = () => <div>Test</div>;";
-    writeFileSync(join(templatesDir, "test-component.tsx"), sourceContent, "utf8");
+    writeTemplateSource("test-component.tsx", sourceContent);
 
     const template: Template = {
       name: "test-template",
@@ -77,9 +82,7 @@ describe("generateComponentFiles", () => {
   it("should skip existing files when overwrite is false", async () => {
     // Create a test template source file in the correct location
     const sourceContent = "export const TestComponent = () => <div>Test</div>;";
-    const sourceDir = join(process.cwd(), "src/registry/templates/test-template");
-    mkdirSync(sourceDir, { recursive: true });
-    writeFileSync(join(sourceDir, "test-component.tsx"), sourceContent, "utf8");
+    writeTemplateSource("test-component.tsx", sourceContent);
 
     // Create existing file in destination
     const existingPath = join(testDir, "components/test-component.tsx");
@@ -122,7 +125,7 @@ describe("generateComponentFiles", () => {
   it("should overwrite existing files when overwrite is true", async () => {
     // Create a test template source file
     const sourceContent = "export const TestComponent = () => <div>New</div>;";
-    writeFileSync(join(templatesDir, "test-component.tsx"), sourceContent, "utf8");
+    writeTemplateSource("test-component.tsx", sourceContent);
 
     // Create existing file
     const existingPath = join(testDir, "components/test-component.tsx");
@@ -234,7 +237,7 @@ describe("generateComponentFiles", () => {
     };
 
     // Create only the UI file
-    writeFileSync(join(templatesDir, "component.tsx"), "ui content", "utf8");
+    writeTemplateSource("component.tsx", "ui content");
 
     const results = await generateComponentFiles(template, context, false);
 

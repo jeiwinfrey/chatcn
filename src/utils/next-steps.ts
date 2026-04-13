@@ -2,7 +2,6 @@ import { existsSync } from "node:fs";
 import { relative, join } from "node:path";
 import type { Provider, Template } from "../schema.js";
 import type { PathContext } from "./path-resolver.js";
-import { resolvePath } from "./path-resolver.js";
 
 function formatRelativePath(cwd: string, absolutePath: string): string {
   const rel = relative(cwd, absolutePath).replaceAll("\\", "/");
@@ -34,6 +33,28 @@ function getRenderTarget(cwd: string, framework: PathContext["framework"]): stri
   }
 }
 
+function getComponentImport(template: Template): { componentName: string; importLine: string } {
+  switch (template.name) {
+    case "chatbot-assistant":
+      return {
+        componentName: "Assistant",
+        importLine: 'import { Assistant } from "@/components/assistant";',
+      };
+    case "chatbot-support":
+      return {
+        componentName: "Chat",
+        importLine: 'import { Chat } from "@/components/support-chat";',
+      };
+    case "chatbot-basic":
+    case "chatbot-ui":
+    default:
+      return {
+        componentName: "Chat",
+        importLine: 'import { Chat } from "@/components/chat";',
+      };
+  }
+}
+
 export function printNextSteps(args: {
   cwd: string;
   template: Template;
@@ -42,10 +63,8 @@ export function printNextSteps(args: {
   context: PathContext;
 }): void {
   const { cwd, template, provider, selectedModel, context } = args;
-  const componentFiles = template.files
-    .filter((file) => file.type === "ui")
-    .map((file) => formatRelativePath(cwd, resolvePath(file.path, context)));
   const renderTarget = getRenderTarget(cwd, context.framework);
+  const { componentName, importLine } = getComponentImport(template);
 
   console.log("\nNext steps:");
   console.log("1. Copy `.env.example` to `.env.local` (Next.js) or `.env`, then add your API key(s).");
@@ -59,10 +78,12 @@ export function printNextSteps(args: {
     `   The default model is ${selectedModel}. Change \`AI_MODEL\` later if you want to use a different one.`
   );
 
-  if (componentFiles.length > 0) {
-    console.log(`2. Render the generated component in ${renderTarget}:`);
-    componentFiles.forEach((file) => {
-      console.log(`   - ${file}`);
-    });
-  }
+  console.log(`2. In ${renderTarget}, render it like this:`);
+  console.log("   ```tsx");
+  console.log(`   ${importLine}`);
+  console.log("");
+  console.log("   export default function Page() {");
+  console.log(`     return <${componentName} />;`);
+  console.log("   }");
+  console.log("   ```");
 }
