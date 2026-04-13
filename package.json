@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Scaffold AI chatbot templates into your shadcn project",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeiwinfrey/chatcn.git"
+  },
+  "homepage": "https://github.com/jeiwinfrey/chatcn#readme",
+  "bugs": {
+    "url": "https://github.com/jeiwinfrey/chatcn/issues"
+  },
+  "author": "Jei Winfrey",
   "bin": {
     "chatcn": "./dist/index.js"
   },

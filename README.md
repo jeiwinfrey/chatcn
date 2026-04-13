@@ -2,6 +2,9 @@
 
 Scaffold production-ready AI chatbot templates into your shadcn project.
 
+- npm: https://www.npmjs.com/package/chatcn
+- GitHub: https://github.com/jeiwinfrey/chatcn
+
 ## Quickstart
 
 Initialize a chatbot in your existing shadcn project:
@@ -28,7 +31,7 @@ npx shadcn@latest init
 
 ## Templates
 
-chatcn provides 4 chatbot templates:
+chatcn provides 5 chatbot templates:
 
 ### chatbot-basic
 Pick this if you are building a simple chatbot and want the smallest starting point.
@@ -49,6 +52,11 @@ Pick this if you are building a reusable assistant and want cleaner separation b
 Pick this if you are building a support or helpdesk chatbot with quick replies and a guided tone.
 
 **shadcn components:** button, input, scroll-area, card, badge
+
+### chatbot-custom
+Pick this if you want the simple chatbot starter with optional avatars, names, and loading behavior during setup.
+
+**shadcn components:** button, input, scroll-area
 
 ## Providers
 
@@ -77,7 +85,7 @@ Specify a template without interactive prompt:
 npx chatcn init --template chatbot-ui
 ```
 
-Valid values: `chatbot-basic`, `chatbot-ui`, `chatbot-assistant`, `chatbot-support`
+Valid values: `chatbot-basic`, `chatbot-ui`, `chatbot-assistant`, `chatbot-support`, `chatbot-custom`
 
 ### --provider
 
@@ -397,14 +405,15 @@ Run `npm install` to ensure all dependencies are installed. For AWS Bedrock, you
 
 ## Development and Testing
 
-### For Contributors
+### Development
 
-If you're contributing to chatcn, see the testing documentation:
+Run the built-in checks before opening a release:
 
-- **[Testing Documentation Index](TESTING_DOCUMENTATION_INDEX.md)** - Overview of all testing resources
-- **[Test Suite README](TEST_SUITE_README.md)** - Automated test suite guide
-- **[Manual Testing Checklist](MANUAL_TESTING_CHECKLIST.md)** - Comprehensive manual testing (1-2 hours)
-- **[Manual Testing Quick Start](MANUAL_TESTING_QUICK_START.md)** - Quick validation tests (30 minutes)
+```bash
+npm run typecheck
+npm test
+npm run build
+```
 
 ### Running Tests
 
