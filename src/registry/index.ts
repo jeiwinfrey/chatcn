@@ -24,7 +24,7 @@ let _registry: Registry | null = null;
  */
 export function loadRegistry(): Registry {
   if (_registry) return _registry;
-  const registryPath = join(__dirname, "registry.json");
+  const registryPath = join(__dirname, "../registry/registry.json");
   const raw = JSON.parse(readFileSync(registryPath, "utf8"));
   _registry = RegistrySchema.parse(raw);
   return _registry;
