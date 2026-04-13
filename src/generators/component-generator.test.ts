@@ -75,11 +75,13 @@ describe("generateComponentFiles", () => {
   });
 
   it("should skip existing files when overwrite is false", async () => {
-    // Create a test template source file
+    // Create a test template source file in the correct location
     const sourceContent = "export const TestComponent = () => <div>Test</div>;";
-    writeFileSync(join(templatesDir, "test-component.tsx"), sourceContent, "utf8");
+    const sourceDir = join(process.cwd(), "src/registry/templates/test-template");
+    mkdirSync(sourceDir, { recursive: true });
+    writeFileSync(join(sourceDir, "test-component.tsx"), sourceContent, "utf8");
 
-    // Create existing file
+    // Create existing file in destination
     const existingPath = join(testDir, "components/test-component.tsx");
     mkdirSync(join(testDir, "components"), { recursive: true });
     writeFileSync(existingPath, "existing content", "utf8");
@@ -115,6 +117,9 @@ describe("generateComponentFiles", () => {
 
     expect(results).toHaveLength(1);
     expect(results[0].status).toBe("skipped");
+    
+    // Clean up source file
+    rmSync(sourceDir, { recursive: true, force: true });
   });
 
   it("should overwrite existing files when overwrite is true", async () => {
