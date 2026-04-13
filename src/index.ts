@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleInit } from './commands/init.js';
 
 const program = new Command();
 
@@ -13,10 +14,9 @@ program
   .option('--cwd <path>', 'Target directory', process.cwd())
   .option('--yes', 'Skip all prompts and use defaults')
   .option('--overwrite', 'Overwrite existing files')
-  .action(async (options) => {
-    // TODO: Implement init command handler
-    console.log('Init command called with options:', options);
-  });
+  .option('--template <name>', 'Template name')
+  .option('--provider <name>', 'Provider name')
+  .action(handleInit);
 
 program
   .command('add')
