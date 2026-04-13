@@ -24,7 +24,11 @@ let _registry: Registry | null = null;
  */
 export function loadRegistry(): Registry {
   if (_registry) return _registry;
-  const registryPath = join(__dirname, "../registry/registry.json");
+  // When running from source: __dirname = src/registry, so registry.json is in same dir
+  // When running from dist: __dirname = dist, so registry.json is in dist/registry/
+  const registryPath = __dirname.endsWith('registry') 
+    ? join(__dirname, "registry.json")
+    : join(__dirname, "registry/registry.json");
   const raw = JSON.parse(readFileSync(registryPath, "utf8"));
   _registry = RegistrySchema.parse(raw);
   return _registry;
