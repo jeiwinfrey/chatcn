@@ -10,6 +10,7 @@ export type Message = {
 export interface UseAssistantOptions {
   api?: string;
   initialMessages?: Message[];
+  systemPrompt?: string;
   onError?: (error: Error) => void;
 }
 
@@ -56,7 +57,7 @@ export interface UseAssistantReturn {
  * ```
  */
 export function useAssistant(options: UseAssistantOptions = {}): UseAssistantReturn {
-  const { api = "/api/chat", initialMessages = [], onError } = options;
+  const { api = "/api/chat", initialMessages = [], systemPrompt, onError } = options;
 
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -77,10 +78,15 @@ export function useAssistant(options: UseAssistantOptions = {}): UseAssistantRet
     abortControllerRef.current = new AbortController();
 
     try {
+      // Prepend system prompt if provided
+      const messagesToSend = systemPrompt
+        ? [{ role: "system" as const, content: systemPrompt }, ...newMessages]
+        : newMessages;
+
       const response = await fetch(api, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: messagesToSend }),
         signal: abortControllerRef.current.signal,
       });
 

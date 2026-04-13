@@ -10,6 +10,7 @@ export type Message = {
 export interface UseChatOptions {
   api?: string;
   initialMessages?: Message[];
+  systemPrompt?: string;
   onError?: (error: Error) => void;
 }
 
@@ -32,6 +33,7 @@ export interface UseChatReturn {
  * @param options - Configuration options for the chat hook
  * @param options.api - API endpoint for chat requests (default: '/api/chat')
  * @param options.initialMessages - Initial message history (default: [])
+ * @param options.systemPrompt - System prompt to prepend to all requests (optional)
  * @param options.onError - Error callback function
  * @returns Object containing chat state and control functions
  * 
@@ -40,6 +42,7 @@ export interface UseChatReturn {
  * function ChatComponent() {
  *   const { messages, input, setInput, sendMessage, isLoading } = useChat({
  *     api: '/api/chat',
+ *     systemPrompt: 'You are a helpful assistant.',
  *     onError: (error) => console.error('Chat error:', error)
  *   });
  * 
@@ -56,7 +59,7 @@ export interface UseChatReturn {
  * ```
  */
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
-  const { api = "/api/chat", initialMessages = [], onError } = options;
+  const { api = "/api/chat", initialMessages = [], systemPrompt, onError } = options;
 
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -77,10 +80,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     abortControllerRef.current = new AbortController();
 
     try {
+      // Prepend system prompt if provided
+      const messagesToSend = systemPrompt
+        ? [{ role: "system" as const, content: systemPrompt }, ...newMessages]
+        : newMessages;
+
       const response = await fetch(api, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: messagesToSend }),
         signal: abortControllerRef.current.signal,
       });
 
