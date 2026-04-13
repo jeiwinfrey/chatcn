@@ -246,6 +246,9 @@ export async function handleAdd(options: AddOptions): Promise<void> {
     const envContent = provider.env
       .map((envVar) => `${envVar}=your_${envVar.toLowerCase()}_here`)
       .join("\n");
+    
+    // Add AI_MODEL configuration with default as comment
+    const modelConfig = `# AI_MODEL=${provider.defaultModel}  # Optional: override the default model`;
 
     if (existsSync(envExamplePath) && !options.overwrite) {
       // Append to existing .env.example
@@ -253,12 +256,12 @@ export async function handleAdd(options: AddOptions): Promise<void> {
         envExamplePath,
         "utf-8"
       );
-      const newContent = `${existingContent}\n\n# Added by chatcn for ${provider.label}\n${envContent}\n`;
+      const newContent = `${existingContent}\n\n# Added by chatcn for ${provider.label}\n${envContent}\n${modelConfig}\n`;
       writeFileSync(envExamplePath, newContent, "utf-8");
       logger.info(`Updated ${envExamplePath}`);
     } else {
       // Create new .env.example
-      const newContent = `# Environment variables for ${provider.label}\n${envContent}\n`;
+      const newContent = `# Environment variables for ${provider.label}\n${envContent}\n${modelConfig}\n`;
       writeFileSync(envExamplePath, newContent, "utf-8");
       logger.success(`Created ${envExamplePath}`);
     }
