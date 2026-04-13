@@ -94,11 +94,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       if (!response.ok) {
         let message = `HTTP ${response.status}`;
+        const errorResponse = response.clone();
         try {
-          const payload = (await response.json()) as { error?: string };
+          const payload = (await errorResponse.json()) as { error?: string };
           if (payload?.error) message = payload.error;
         } catch {
-          const text = await response.text();
+          const text = await errorResponse.text();
           if (text.trim()) message = text;
         }
         throw new Error(message);

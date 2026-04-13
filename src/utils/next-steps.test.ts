@@ -55,6 +55,9 @@ describe("printNextSteps", () => {
     expect(output).toContain("return <Assistant />;");
     expect(output).toContain("The default model is gpt-5-mini");
     expect(output).toContain("/app/page.tsx");
+    expect(output).toContain("change the system prompt");
+    expect(output).toContain("./components/assistant.tsx");
+    expect(output).toContain("useAssistant({ systemPrompt:");
   });
 
   it("uses the shared Chat component for support templates", () => {
@@ -84,5 +87,7 @@ describe("printNextSteps", () => {
 
     expect(output).toContain('import { Chat } from "@/components/support-chat";');
     expect(output).toContain("return <Chat />;");
+    expect(output).toContain("./components/support-chat.tsx");
+    expect(output).toContain("useChat({ systemPrompt:");
   });
 });
