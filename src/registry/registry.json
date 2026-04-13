@@ -101,6 +101,29 @@
         }
       ],
       "requiresBackend": true
+    },
+    {
+      "name": "chatbot-custom",
+      "description": "Pick this if you want the same simple chatbot starter, but with custom avatars, names, and loading behavior during setup.",
+      "shadcnDeps": ["button", "input", "scroll-area"],
+      "files": [
+        {
+          "path": "{{components}}/chat.tsx",
+          "from": "templates/chatbot-basic/chat.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{components}}/markdown-content.tsx",
+          "from": "templates/chatbot-basic/markdown-content.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{hooks}}/use-chat.ts",
+          "from": "templates/chatbot-basic/use-chat.ts",
+          "type": "hook"
+        }
+      ],
+      "requiresBackend": true
     }
   ],
   "providers": [

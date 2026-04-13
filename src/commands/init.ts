@@ -165,9 +165,12 @@ export async function handleInit(options: InitOptions): Promise<void> {
     }
 
     const systemPrompt = getDefaultSystemPrompt(template);
-    const templateCustomization = options.yes
-      ? getDefaultTemplateCustomization()
-      : await promptTemplateCustomization();
+    const templateCustomization =
+      template.name === "chatbot-custom"
+        ? options.yes
+          ? getDefaultTemplateCustomization()
+          : await promptTemplateCustomization()
+        : getDefaultTemplateCustomization();
 
     // 7. Identify missing shadcn components
     const missingComponents = template.shadcnDeps.filter((dep) => {

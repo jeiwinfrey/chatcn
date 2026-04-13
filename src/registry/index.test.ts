@@ -25,15 +25,16 @@ describe('Registry Validation', () => {
       expect(registry1).toBe(registry2);
     });
 
-    it('should load all 4 expected templates', () => {
+    it('should load all 5 expected templates', () => {
       const registry = loadRegistry();
 
-      expect(registry.templates.length).toBe(4);
+      expect(registry.templates.length).toBe(5);
       const templateNames = registry.templates.map((t) => t.name);
       expect(templateNames).toContain('chatbot-basic');
       expect(templateNames).toContain('chatbot-ui');
       expect(templateNames).toContain('chatbot-assistant');
       expect(templateNames).toContain('chatbot-support');
+      expect(templateNames).toContain('chatbot-custom');
     });
 
     it('should load all 12 expected providers', () => {
@@ -282,11 +283,12 @@ describe('Registry Validation', () => {
       expect(typeof template?.requiresBackend).toBe('boolean');
     });
 
-    it('should find all 4 templates by name', () => {
+    it('should find all 5 templates by name', () => {
       expect(getTemplate('chatbot-basic')).toBeDefined();
       expect(getTemplate('chatbot-ui')).toBeDefined();
       expect(getTemplate('chatbot-assistant')).toBeDefined();
       expect(getTemplate('chatbot-support')).toBeDefined();
+      expect(getTemplate('chatbot-custom')).toBeDefined();
     });
 
     it('should return empty string for empty template name', () => {
@@ -401,7 +403,7 @@ describe('Registry Validation', () => {
       const templates = listTemplates();
 
       expect(Array.isArray(templates)).toBe(true);
-      expect(templates.length).toBe(4);
+      expect(templates.length).toBe(5);
     });
 
     it('should return templates with all required properties', () => {

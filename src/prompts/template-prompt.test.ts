@@ -26,6 +26,13 @@ describe("promptTemplate", () => {
       files: [],
       requiresBackend: true,
     },
+    {
+      name: "chatbot-custom",
+      description: "A customizable chatbot template",
+      shadcnDeps: ["button", "input"],
+      files: [],
+      requiresBackend: true,
+    },
   ];
 
   beforeEach(() => {
@@ -57,6 +64,11 @@ describe("promptTemplate", () => {
           value: "chatbot-ui",
           label: "chatbot-ui",
           hint: "An advanced UI chatbot template",
+        },
+        {
+          value: "chatbot-custom",
+          label: "chatbot-custom",
+          hint: "A customizable chatbot template",
         },
       ],
     });

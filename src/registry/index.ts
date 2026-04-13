@@ -18,7 +18,7 @@ let _registry: Registry | null = null;
  * @example
  * ```ts
  * const registry = loadRegistry();
- * console.log(registry.templates.length); // 4
+ * console.log(registry.templates.length); // 5
  * console.log(registry.providers.length); // 12
  * ```
  */
