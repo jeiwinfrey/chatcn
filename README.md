@@ -438,7 +438,6 @@ If you want to help improve chatcn, start here:
 
 - [Contributing Guide](CONTRIBUTING.md)
 - [Issue Tracker](https://github.com/jeiwinfrey/chatcn/issues)
-- [Open Source Checklist](OPEN_SOURCE_CHECKLIST.md)
 - [Release Notes](RELEASE_NOTES.md)
 
 ### Running Tests
