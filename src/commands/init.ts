@@ -12,7 +12,11 @@ import { loadRegistry, getTemplate, getProvider } from "../registry/index.js";
 import { generateLlmFile } from "../providers/generate-llm.js";
 import { generateComponentFiles } from "../generators/component-generator.js";
 import { generateHookFiles } from "../generators/hook-generator.js";
-import { generateApiRoute, supportsGeneratedApiRoute } from "../generators/api-generator.js";
+import {
+  generateApiRoute,
+  supportsGeneratedApiRoute,
+  getBackendSetupHint,
+} from "../generators/api-generator.js";
 import { resolvePath } from "../utils/path-resolver.js";
 import { writeFile } from "../utils/write-file.js";
 import { logger } from "../utils/logger.js";
@@ -117,9 +121,7 @@ export async function handleInit(options: InitOptions): Promise<void> {
     }
 
     if (template.requiresBackend && !supportsGeneratedApiRoute(framework)) {
-      p.log.error(
-        `The detected framework (${framework}) does not support automatic API route generation yet. chatcn would generate a chat UI that 404s on /api/chat, so setup is blocked until you add a backend route manually.`
-      );
+      p.log.error(getBackendSetupHint(framework));
       process.exit(1);
     }
 

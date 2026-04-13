@@ -7,7 +7,7 @@ import type { PathContext } from "../utils/path-resolver.js";
 
 describe("generateHookFiles", () => {
   const testDir = join(process.cwd(), "test-output-hook-generator");
-  const templatesDir = join(process.cwd(), "src/registry/templates/test-template");
+  const templatesDir = join(process.cwd(), "src/registry/templates/test-template-hook");
 
   function writeTemplateSource(filename: string, content: string) {
     mkdirSync(templatesDir, { recursive: true });
@@ -45,12 +45,12 @@ describe("generateHookFiles", () => {
           from: "templates/test-template/test-component.tsx",
           type: "ui",
         },
-        {
-          path: "{{hooks}}/use-test.ts",
-          from: "templates/test-template/use-test.ts",
-          type: "hook",
-        },
-      ],
+          {
+            path: "{{hooks}}/use-test.ts",
+            from: "templates/test-template-hook/use-test.ts",
+            type: "hook",
+          },
+        ],
       requiresBackend: false,
     };
 
@@ -94,12 +94,12 @@ describe("generateHookFiles", () => {
       description: "Test template",
       shadcnDeps: [],
       files: [
-        {
-          path: "{{hooks}}/use-test.ts",
-          from: "templates/test-template/use-test.ts",
-          type: "hook",
-        },
-      ],
+          {
+            path: "{{hooks}}/use-test.ts",
+            from: "templates/test-template-hook/use-test.ts",
+            type: "hook",
+          },
+        ],
       requiresBackend: false,
     };
 
@@ -137,12 +137,12 @@ describe("generateHookFiles", () => {
       description: "Test template",
       shadcnDeps: [],
       files: [
-        {
-          path: "{{hooks}}/use-test.ts",
-          from: "templates/test-template/use-test.ts",
-          type: "hook",
-        },
-      ],
+          {
+            path: "{{hooks}}/use-test.ts",
+            from: "templates/test-template-hook/use-test.ts",
+            type: "hook",
+          },
+        ],
       requiresBackend: false,
     };
 
@@ -171,12 +171,12 @@ describe("generateHookFiles", () => {
       description: "Test template",
       shadcnDeps: [],
       files: [
-        {
-          path: "{{hooks}}/missing.ts",
-          from: "templates/test-template/missing.ts",
-          type: "hook",
-        },
-      ],
+          {
+            path: "{{hooks}}/missing.ts",
+            from: "templates/test-template-hook/missing.ts",
+            type: "hook",
+          },
+        ],
       requiresBackend: false,
     };
 
@@ -206,27 +206,27 @@ describe("generateHookFiles", () => {
       description: "Test template",
       shadcnDeps: [],
       files: [
-        {
-          path: "{{components}}/component.tsx",
-          from: "templates/test-template/component.tsx",
-          type: "ui",
-        },
-        {
-          path: "{{hooks}}/use-hook.ts",
-          from: "templates/test-template/use-hook.ts",
-          type: "hook",
-        },
-        {
-          path: "{{lib}}/lib.ts",
-          from: "templates/test-template/lib.ts",
-          type: "lib",
-        },
-        {
-          path: "{{api}}/route.ts",
-          from: "templates/test-template/route.ts",
-          type: "api",
-        },
-      ],
+          {
+            path: "{{components}}/component.tsx",
+            from: "templates/test-template-hook/component.tsx",
+            type: "ui",
+          },
+          {
+            path: "{{hooks}}/use-hook.ts",
+            from: "templates/test-template-hook/use-hook.ts",
+            type: "hook",
+          },
+          {
+            path: "{{lib}}/lib.ts",
+            from: "templates/test-template-hook/lib.ts",
+            type: "lib",
+          },
+          {
+            path: "{{api}}/route.ts",
+            from: "templates/test-template-hook/route.ts",
+            type: "api",
+          },
+        ],
       requiresBackend: false,
     };
 

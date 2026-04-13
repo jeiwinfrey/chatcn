@@ -216,8 +216,9 @@ describe("generateApiRoute", () => {
     const result = await generateApiRoute("vite", context, false);
 
     expect(result.status).toBe("skipped");
-    expect(result.message).toContain("Vite projects require manual API route setup");
-    expect(result.message).toContain("streamChat function from lib/llm.ts");
+    expect(result.message).toContain("Vite projects require a manually wired backend route");
+    expect(result.message).toContain("Next.js, Remix, Astro, or TanStack Start");
+    expect(result.message).toContain("Hono, Express, or Fastify");
   });
 
   it("should skip manual framework with helpful message", async () => {
@@ -230,7 +231,7 @@ describe("generateApiRoute", () => {
     const result = await generateApiRoute("manual", context, false);
 
     expect(result.status).toBe("skipped");
-    expect(result.message).toContain("manual API route setup");
+    expect(result.message).toContain("Manual projects require a manually wired backend route");
   });
 
   it("should skip existing files when overwrite is false", async () => {
@@ -296,6 +297,6 @@ describe("generateApiRoute", () => {
     const result = await generateApiRoute("laravel", context, false);
 
     expect(result.status).toBe("skipped");
-    expect(result.message).toContain("laravel projects require manual API route setup");
+    expect(result.message).toContain("Laravel projects require a manually wired backend route");
   });
 });

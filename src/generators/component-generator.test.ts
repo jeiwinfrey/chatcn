@@ -7,7 +7,7 @@ import type { PathContext } from "../utils/path-resolver.js";
 
 describe("generateComponentFiles", () => {
   const testDir = join(process.cwd(), "test-output-component-generator");
-  const templatesDir = join(process.cwd(), "src/registry/templates/test-template");
+  const templatesDir = join(process.cwd(), "src/registry/templates/test-template-component");
 
   function writeTemplateSource(filename: string, content: string) {
     mkdirSync(templatesDir, { recursive: true });
@@ -35,23 +35,23 @@ describe("generateComponentFiles", () => {
     const sourceContent = "export const TestComponent = () => <div>Test</div>;";
     writeTemplateSource("test-component.tsx", sourceContent);
 
-    const template: Template = {
-      name: "test-template",
-      description: "Test template",
-      shadcnDeps: [],
-      files: [
-        {
-          path: "{{components}}/test-component.tsx",
-          from: "templates/test-template/test-component.tsx",
-          type: "ui",
-        },
-        {
-          path: "{{hooks}}/use-test.ts",
-          from: "templates/test-template/use-test.ts",
-          type: "hook",
-        },
-      ],
-      requiresBackend: false,
+      const template: Template = {
+        name: "test-template",
+        description: "Test template",
+        shadcnDeps: [],
+        files: [
+          {
+            path: "{{components}}/test-component.tsx",
+            from: "templates/test-template-component/test-component.tsx",
+            type: "ui",
+          },
+          {
+            path: "{{hooks}}/use-test.ts",
+            from: "templates/test-template-component/use-test.ts",
+            type: "hook",
+          },
+        ],
+        requiresBackend: false,
     };
 
     const context: PathContext = {
@@ -89,18 +89,18 @@ describe("generateComponentFiles", () => {
     mkdirSync(join(testDir, "components"), { recursive: true });
     writeFileSync(existingPath, "existing content", "utf8");
 
-    const template: Template = {
-      name: "test-template",
-      description: "Test template",
-      shadcnDeps: [],
-      files: [
-        {
-          path: "{{components}}/test-component.tsx",
-          from: "templates/test-template/test-component.tsx",
-          type: "ui",
-        },
-      ],
-      requiresBackend: false,
+      const template: Template = {
+        name: "test-template",
+        description: "Test template",
+        shadcnDeps: [],
+        files: [
+          {
+            path: "{{components}}/test-component.tsx",
+            from: "templates/test-template-component/test-component.tsx",
+            type: "ui",
+          },
+        ],
+        requiresBackend: false,
     };
 
     const context: PathContext = {
@@ -132,18 +132,18 @@ describe("generateComponentFiles", () => {
     mkdirSync(join(testDir, "components"), { recursive: true });
     writeFileSync(existingPath, "existing content", "utf8");
 
-    const template: Template = {
-      name: "test-template",
-      description: "Test template",
-      shadcnDeps: [],
-      files: [
-        {
-          path: "{{components}}/test-component.tsx",
-          from: "templates/test-template/test-component.tsx",
-          type: "ui",
-        },
-      ],
-      requiresBackend: false,
+      const template: Template = {
+        name: "test-template",
+        description: "Test template",
+        shadcnDeps: [],
+        files: [
+          {
+            path: "{{components}}/test-component.tsx",
+            from: "templates/test-template-component/test-component.tsx",
+            type: "ui",
+          },
+        ],
+        requiresBackend: false,
     };
 
     const context: PathContext = {
@@ -172,18 +172,18 @@ describe("generateComponentFiles", () => {
 }`;
     writeTemplateSource("test-component.tsx", sourceContent);
 
-    const template: Template = {
-      name: "test-template",
-      description: "Test template",
-      shadcnDeps: [],
-      files: [
-        {
-          path: "{{components}}/test-component.tsx",
-          from: "templates/test-template/test-component.tsx",
-          type: "ui",
-        },
-      ],
-      requiresBackend: false,
+      const template: Template = {
+        name: "test-template",
+        description: "Test template",
+        shadcnDeps: [],
+        files: [
+          {
+            path: "{{components}}/test-component.tsx",
+            from: "templates/test-template-component/test-component.tsx",
+            type: "ui",
+          },
+        ],
+        requiresBackend: false,
     };
 
     const context: PathContext = {
@@ -211,18 +211,18 @@ describe("generateComponentFiles", () => {
   });
 
   it("should return error status when source file is missing", async () => {
-    const template: Template = {
-      name: "test-template",
-      description: "Test template",
-      shadcnDeps: [],
-      files: [
-        {
-          path: "{{components}}/missing.tsx",
-          from: "templates/test-template/missing.tsx",
-          type: "ui",
-        },
-      ],
-      requiresBackend: false,
+      const template: Template = {
+        name: "test-template",
+        description: "Test template",
+        shadcnDeps: [],
+        files: [
+          {
+            path: "{{components}}/missing.tsx",
+            from: "templates/test-template-component/missing.tsx",
+            type: "ui",
+          },
+        ],
+        requiresBackend: false,
     };
 
     const context: PathContext = {
@@ -246,33 +246,33 @@ describe("generateComponentFiles", () => {
   });
 
   it("should filter out non-ui files", async () => {
-    const template: Template = {
-      name: "test-template",
-      description: "Test template",
-      shadcnDeps: [],
-      files: [
-        {
-          path: "{{components}}/component.tsx",
-          from: "templates/test-template/component.tsx",
-          type: "ui",
-        },
-        {
-          path: "{{hooks}}/use-hook.ts",
-          from: "templates/test-template/use-hook.ts",
-          type: "hook",
-        },
-        {
-          path: "{{lib}}/lib.ts",
-          from: "templates/test-template/lib.ts",
-          type: "lib",
-        },
-        {
-          path: "{{api}}/route.ts",
-          from: "templates/test-template/route.ts",
-          type: "api",
-        },
-      ],
-      requiresBackend: false,
+      const template: Template = {
+        name: "test-template",
+        description: "Test template",
+        shadcnDeps: [],
+        files: [
+          {
+            path: "{{components}}/component.tsx",
+            from: "templates/test-template-component/component.tsx",
+            type: "ui",
+          },
+          {
+            path: "{{hooks}}/use-hook.ts",
+            from: "templates/test-template-component/use-hook.ts",
+            type: "hook",
+          },
+          {
+            path: "{{lib}}/lib.ts",
+            from: "templates/test-template-component/lib.ts",
+            type: "lib",
+          },
+          {
+            path: "{{api}}/route.ts",
+            from: "templates/test-template-component/route.ts",
+            type: "api",
+          },
+        ],
+        requiresBackend: false,
     };
 
     const context: PathContext = {

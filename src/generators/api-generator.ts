@@ -29,9 +29,22 @@ function formatFrameworkName(framework: Framework): string {
       return "TanStack Start";
     case "react-router":
       return "React Router";
+    case "manual":
+      return "Manual";
+    case "laravel":
+      return "Laravel";
     default:
       return framework;
   }
+}
+
+export function getBackendSetupHint(framework: Framework): string {
+  const frameworkLabel = formatFrameworkName(framework);
+  return [
+    `${frameworkLabel} projects require a manually wired backend route.`,
+    "If you want chatcn to generate /api/chat for you, pick Next.js, Remix, Astro, or TanStack Start.",
+    "If you want to stay on Vite, add a small backend with Hono, Express, or Fastify and point the chat hook at that endpoint.",
+  ].join(" ");
 }
 
 /**
@@ -87,7 +100,7 @@ export async function generateApiRoute(
         return {
           path: "",
           status: "skipped",
-          message: `${formatFrameworkName(framework)} projects require manual API route setup. Please create your API endpoint and use the streamChat function from lib/llm.ts`,
+          message: `${getBackendSetupHint(framework)}`,
         };
         
       default:
