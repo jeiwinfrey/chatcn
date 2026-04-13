@@ -11,7 +11,7 @@ const BANNER = `
  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝╚═╝  ╚═══╝
 `;
 
-const STAR_MESSAGE = `⭐ GitHub: https://github.com/jeiwinfrey/chatcn | npm: https://www.npmjs.com/package/@jeiwinfrey/chatcn\n`;
+const STAR_MESSAGE = `⭐ GitHub: https://github.com/jeiwinfrey/chatcn | npm: https://www.npmjs.com/package/chatcn-cli\n`;
 
 // Display banner
 console.log(BANNER);

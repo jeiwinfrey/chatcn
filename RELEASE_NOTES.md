@@ -21,5 +21,5 @@ chatcn is a CLI that scaffolds production-ready AI chatbot templates into existi
 
 ### Links
 
-- npm: https://www.npmjs.com/package/@jeiwinfrey/chatcn
+- npm: https://www.npmjs.com/package/chatcn-cli
 - GitHub: https://github.com/jeiwinfrey/chatcn
