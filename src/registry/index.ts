@@ -113,5 +113,11 @@ export function listProviders(): Provider[] {
  * ```
  */
 export function resolveTemplatePath(fromPath: string): string {
-  return join(__dirname, fromPath);
+  // When running from source: __dirname = src/registry, templates are in same dir
+  // When running from dist: __dirname = dist, templates are in dist/registry/
+  if (__dirname.endsWith('registry')) {
+    return join(__dirname, fromPath);
+  } else {
+    return join(__dirname, 'registry', fromPath);
+  }
 }
