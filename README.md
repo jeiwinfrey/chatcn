@@ -372,6 +372,33 @@ Make sure you've set the required environment variables for your provider. Check
 
 Run `npm install` to ensure all dependencies are installed. For AWS Bedrock, you'll need to manually install `@aws-sdk/client-bedrock-runtime`.
 
+## Development and Testing
+
+### For Contributors
+
+If you're contributing to chatcn, see the testing documentation:
+
+- **[Testing Documentation Index](TESTING_DOCUMENTATION_INDEX.md)** - Overview of all testing resources
+- **[Test Suite README](TEST_SUITE_README.md)** - Automated test suite guide
+- **[Manual Testing Checklist](MANUAL_TESTING_CHECKLIST.md)** - Comprehensive manual testing (1-2 hours)
+- **[Manual Testing Quick Start](MANUAL_TESTING_QUICK_START.md)** - Quick validation tests (30 minutes)
+
+### Running Tests
+
+```bash
+# Run all automated tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Build the CLI
+npm run build
+
+# Test global installation
+./test-global-install.sh
+```
+
 ## License
 
 MIT
