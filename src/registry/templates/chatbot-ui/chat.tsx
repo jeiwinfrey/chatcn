@@ -11,6 +11,7 @@ import { ChatMessage } from "@/components/chat-message";
 
 const SYSTEM_PROMPT = "__SYSTEM_PROMPT__";
 const EMPTY_STATE = "Start a conversation or ask a question.";
+const SHOW_LOADING_INDICATOR = __SHOW_LOADING_INDICATOR__;
 
 export function Chat() {
   const { messages, input, setInput, isLoading, sendMessage, stop, error } = useChat({
@@ -47,7 +48,7 @@ export function Chat() {
           {messages.map((message, index) => (
             <ChatMessage key={index} message={message} />
           ))}
-          {isLoading && messages[messages.length - 1]?.role === "user" && (
+          {SHOW_LOADING_INDICATOR && isLoading && messages[messages.length - 1]?.role === "user" && (
             <div className="flex justify-start">
               <div className="flex gap-3 max-w-[80%]">
                 <Skeleton className="h-10 w-10 rounded-full flex-shrink-0" />

@@ -23,8 +23,12 @@ import { logger } from "../utils/logger.js";
 import { promptTemplate } from "../prompts/template-prompt.js";
 import { promptProvider } from "../prompts/provider-prompt.js";
 import { promptModel } from "../prompts/model-prompt.js";
-import { promptSystemPrompt } from "../prompts/system-prompt.js";
+import {
+  getDefaultTemplateCustomization,
+  promptTemplateCustomization,
+} from "../prompts/template-customization.js";
 import { printNextSteps } from "../utils/next-steps.js";
+import { getDefaultSystemPrompt } from "../utils/default-system-prompt.js";
 import type { PathContext } from "../utils/path-resolver.js";
 
 interface AddOptions {
@@ -136,7 +140,10 @@ export async function handleAdd(options: AddOptions): Promise<void> {
         : await promptModel(provider);
     }
 
-    const systemPrompt = options.yes ? undefined : await promptSystemPrompt();
+    const systemPrompt = getDefaultSystemPrompt(template);
+    const templateCustomization = options.yes
+      ? getDefaultTemplateCustomization()
+      : await promptTemplateCustomization();
 
     // 7. Identify missing shadcn components
     const missingComponents = template.shadcnDeps.filter((dep) => {
@@ -212,7 +219,16 @@ export async function handleAdd(options: AddOptions): Promise<void> {
       template,
       context,
       options.overwrite ?? false,
-      { systemPrompt }
+      {
+        systemPrompt,
+        replacements: {
+          __SHOW_USER_AVATAR__: String(templateCustomization.showUserAvatar),
+          __SHOW_ASSISTANT_AVATAR__: String(templateCustomization.showAssistantAvatar),
+          __SHOW_USER_NAME__: String(templateCustomization.showUserName),
+          __SHOW_ASSISTANT_NAME__: String(templateCustomization.showAssistantName),
+          __SHOW_LOADING_INDICATOR__: String(templateCustomization.showLoadingIndicator),
+        },
+      }
     );
     for (const result of componentResults) {
       if (result.status === "written") {

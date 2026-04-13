@@ -11,6 +11,7 @@ import { AssistantMessage } from "@/components/assistant-message";
 
 const SYSTEM_PROMPT = "__SYSTEM_PROMPT__";
 const EMPTY_STATE = "Ask for help, ideas, or a walkthrough.";
+const SHOW_LOADING_INDICATOR = __SHOW_LOADING_INDICATOR__;
 
 export function Assistant() {
   const { messages, input, setInput, isLoading, sendMessage, stop, error } = useAssistant({
@@ -52,7 +53,7 @@ export function Assistant() {
           {messages.map((message, index) => (
             <AssistantMessage key={index} message={message} />
           ))}
-          {isLoading && messages[messages.length - 1]?.role === "user" && (
+          {SHOW_LOADING_INDICATOR && isLoading && messages[messages.length - 1]?.role === "user" && (
             <div className="flex justify-start">
               <div className="max-w-[80%] rounded-lg border bg-muted px-4 py-2">
                 <div className="space-y-2">

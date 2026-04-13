@@ -13,6 +13,7 @@ export interface GenerationResult {
 
 export interface ComponentGenerationOptions {
   systemPrompt?: string;
+  replacements?: Record<string, string>;
 }
 
 /**
@@ -38,15 +39,19 @@ export async function generateComponentFiles(
     options.systemPrompt === undefined
       ? "undefined"
       : JSON.stringify(options.systemPrompt);
+  const replacements = options.replacements ?? {};
   
   for (const file of componentFiles) {
     try {
       // Read source file from src/registry/templates/{template-name}/{file.from}
       const sourcePath = resolveTemplatePath(file.from);
-      const content = readFileSync(sourcePath, "utf8").replaceAll(
+      let content = readFileSync(sourcePath, "utf8").replaceAll(
         '"__SYSTEM_PROMPT__"',
         systemPromptReplacement
       );
+      for (const [placeholder, value] of Object.entries(replacements)) {
+        content = content.replaceAll(placeholder, value);
+      }
       
       // Resolve destination path using path resolver
       const destinationPath = resolvePath(file.path, context);

@@ -9,6 +9,11 @@ import { MarkdownContent } from "@/components/markdown-content";
 
 const SYSTEM_PROMPT = "__SYSTEM_PROMPT__";
 const EMPTY_STATE = "Ask me anything to get started.";
+const SHOW_USER_AVATAR = __SHOW_USER_AVATAR__;
+const SHOW_ASSISTANT_AVATAR = __SHOW_ASSISTANT_AVATAR__;
+const SHOW_USER_NAME = __SHOW_USER_NAME__;
+const SHOW_ASSISTANT_NAME = __SHOW_ASSISTANT_NAME__;
+const SHOW_LOADING_INDICATOR = __SHOW_LOADING_INDICATOR__;
 
 export function Chat() {
   const { messages, input, setInput, isLoading, sendMessage, stop, error } = useChat({
@@ -49,18 +54,38 @@ export function Chat() {
                 message.role === "user" ? "justify-end" : "justify-start"
               }`}
             >
-              <div
-                className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted"
-                }`}
-              >
-                <MarkdownContent content={message.content} />
+              <div className={`flex max-w-[80%] gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                {(message.role === "user" ? SHOW_USER_AVATAR : SHOW_ASSISTANT_AVATAR) ? (
+                  <div
+                    className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted"
+                    }`}
+                  >
+                    {message.role === "user" ? "U" : "AI"}
+                  </div>
+                ) : null}
+                <div className="flex min-w-0 flex-col gap-1">
+                  {(message.role === "user" ? SHOW_USER_NAME : SHOW_ASSISTANT_NAME) ? (
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {message.role === "user" ? "You" : "Assistant"}
+                    </span>
+                  ) : null}
+                  <div
+                    className={`rounded-lg px-4 py-2 ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted"
+                    }`}
+                  >
+                    <MarkdownContent content={message.content} />
+                  </div>
+                </div>
               </div>
             </div>
           ))}
-          {isLoading && messages[messages.length - 1]?.role === "user" && (
+          {SHOW_LOADING_INDICATOR && isLoading && messages[messages.length - 1]?.role === "user" && (
             <div className="flex justify-start">
               <div className="rounded-lg border bg-muted px-4 py-2 text-sm text-muted-foreground">
                 Assistant is typing...
