@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { handleInit } from './commands/init.js';
+import { handleAdd } from './commands/add.js';
 
 const program = new Command();
 
@@ -26,9 +27,6 @@ program
   .option('--cwd <path>', 'Target directory', process.cwd())
   .option('--yes', 'Skip all prompts')
   .option('--overwrite', 'Overwrite existing files')
-  .action(async (options) => {
-    // TODO: Implement add command handler
-    console.log('Add command called with options:', options);
-  });
+  .action(handleAdd);
 
 program.parse();
