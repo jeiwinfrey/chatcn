@@ -1,0 +1,207 @@
+{
+  "templates": [
+    {
+      "name": "chatbot-basic",
+      "description": "Minimal chatbot. Input + messages + streaming response.",
+      "shadcnDeps": ["button", "input", "scroll-area"],
+      "files": [
+        {
+          "path": "{{components}}/chat.tsx",
+          "from": "templates/chatbot-basic/chat.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{hooks}}/use-chat.ts",
+          "from": "templates/chatbot-basic/use-chat.ts",
+          "type": "hook"
+        }
+      ],
+      "requiresBackend": true
+    },
+    {
+      "name": "chatbot-ui",
+      "description": "Polished UI with message bubbles, markdown rendering, and loading states.",
+      "shadcnDeps": ["button", "input", "scroll-area", "card", "avatar", "skeleton"],
+      "files": [
+        {
+          "path": "{{components}}/chat.tsx",
+          "from": "templates/chatbot-ui/chat.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{components}}/chat-message.tsx",
+          "from": "templates/chatbot-ui/chat-message.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{hooks}}/use-chat.ts",
+          "from": "templates/chatbot-ui/use-chat.ts",
+          "type": "hook"
+        }
+      ],
+      "requiresBackend": true
+    },
+    {
+      "name": "chatbot-assistant",
+      "description": "Reusable AI assistant with clean UI / hook / LLM layer separation.",
+      "shadcnDeps": ["button", "input", "scroll-area", "card", "separator"],
+      "files": [
+        {
+          "path": "{{components}}/assistant.tsx",
+          "from": "templates/chatbot-assistant/assistant.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{components}}/assistant-message.tsx",
+          "from": "templates/chatbot-assistant/assistant-message.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{hooks}}/use-assistant.ts",
+          "from": "templates/chatbot-assistant/use-assistant.ts",
+          "type": "hook"
+        }
+      ],
+      "requiresBackend": true
+    },
+    {
+      "name": "chatbot-support",
+      "description": "Customer support chatbot with predefined tone and quick-reply chips.",
+      "shadcnDeps": ["button", "input", "scroll-area", "card", "badge"],
+      "files": [
+        {
+          "path": "{{components}}/support-chat.tsx",
+          "from": "templates/chatbot-support/support-chat.tsx",
+          "type": "ui"
+        },
+        {
+          "path": "{{hooks}}/use-support-chat.ts",
+          "from": "templates/chatbot-support/use-support-chat.ts",
+          "type": "hook"
+        }
+      ],
+      "requiresBackend": true
+    }
+  ],
+  "providers": [
+    {
+      "name": "openai",
+      "label": "OpenAI",
+      "env": ["OPENAI_API_KEY"],
+      "baseURL": "https://api.openai.com/v1",
+      "defaultModel": "gpt-4o-mini",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "anthropic",
+      "label": "Anthropic (Claude)",
+      "env": ["ANTHROPIC_API_KEY"],
+      "baseURL": "https://api.anthropic.com/v1",
+      "defaultModel": "claude-sonnet-4-5",
+      "anthropicFormat": true,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "openrouter",
+      "label": "OpenRouter",
+      "env": ["OPENROUTER_API_KEY"],
+      "baseURL": "https://openrouter.ai/api/v1",
+      "defaultModel": "openrouter/auto",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "google",
+      "label": "Google Gemini",
+      "env": ["GOOGLE_API_KEY"],
+      "baseURL": "https://generativelanguage.googleapis.com/v1beta",
+      "defaultModel": "gemini-2.0-flash",
+      "anthropicFormat": false,
+      "googleFormat": true,
+      "bedrockFormat": false
+    },
+    {
+      "name": "aws-bedrock",
+      "label": "AWS Bedrock",
+      "env": ["AWS_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"],
+      "defaultModel": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": true
+    },
+    {
+      "name": "groq",
+      "label": "Groq",
+      "env": ["GROQ_API_KEY"],
+      "baseURL": "https://api.groq.com/openai/v1",
+      "defaultModel": "llama-3.3-70b-versatile",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "together",
+      "label": "Together AI",
+      "env": ["TOGETHER_API_KEY"],
+      "baseURL": "https://api.together.xyz/v1",
+      "defaultModel": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "mistral",
+      "label": "Mistral",
+      "env": ["MISTRAL_API_KEY"],
+      "baseURL": "https://api.mistral.ai/v1",
+      "defaultModel": "mistral-small-latest",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "xai",
+      "label": "xAI (Grok)",
+      "env": ["XAI_API_KEY"],
+      "baseURL": "https://api.x.ai/v1",
+      "defaultModel": "grok-3-mini",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "deepseek",
+      "label": "DeepSeek",
+      "env": ["DEEPSEEK_API_KEY"],
+      "baseURL": "https://api.deepseek.com/v1",
+      "defaultModel": "deepseek-chat",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "cerebras",
+      "label": "Cerebras",
+      "env": ["CEREBRAS_API_KEY"],
+      "baseURL": "https://api.cerebras.ai/v1",
+      "defaultModel": "llama-3.3-70b",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    },
+    {
+      "name": "fireworks",
+      "label": "Fireworks AI",
+      "env": ["FIREWORKS_API_KEY"],
+      "baseURL": "https://api.fireworks.ai/inference/v1",
+      "defaultModel": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+      "anthropicFormat": false,
+      "googleFormat": false,
+      "bedrockFormat": false
+    }
+  ]
+}
