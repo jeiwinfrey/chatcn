@@ -44,10 +44,11 @@ describe("generateApiRoute", () => {
 
     // Verify content includes expected imports and structure
     const content = readFileSync(writtenPath, "utf8");
-    expect(content).toContain("import { streamChat } from '@/lib/llm'");
+    expect(content).toContain("import { streamChat, type Message } from '@/lib/llm'");
     expect(content).toContain("import { NextRequest } from 'next/server'");
     expect(content).toContain("export async function POST(req: NextRequest)");
-    expect(content).toContain("await streamChat(messages, req.signal)");
+    expect(content).toContain("await streamChat(body.messages, req.signal)");
+    expect(content).toContain("Request body must include a messages array.");
   });
 
   it("should generate Next.js Pages Router API route when pages exists", async () => {
@@ -75,9 +76,10 @@ describe("generateApiRoute", () => {
     expect(existsSync(writtenPath)).toBe(true);
 
     const content = readFileSync(writtenPath, "utf8");
-    expect(content).toContain("import { streamChat } from '@/lib/llm'");
+    expect(content).toContain("import { streamChat, type Message } from '@/lib/llm'");
     expect(content).toContain("import type { NextApiRequest, NextApiResponse } from 'next'");
     expect(content).toContain("export default async function handler");
+    expect(content).toContain("Method not allowed");
   });
 
   it("should generate Remix API route", async () => {
@@ -105,10 +107,11 @@ describe("generateApiRoute", () => {
 
     // Verify content includes expected imports and structure
     const content = readFileSync(writtenPath, "utf8");
-    expect(content).toContain("import { streamChat } from '~/lib/llm'");
+    expect(content).toContain("import { streamChat, type Message } from '~/lib/llm'");
     expect(content).toContain("import type { ActionFunctionArgs } from '@remix-run/node'");
     expect(content).toContain("export async function action({ request }: ActionFunctionArgs)");
-    expect(content).toContain("await streamChat(messages, request.signal)");
+    expect(content).toContain("await streamChat(body.messages, request.signal)");
+    expect(content).toContain("Request body must include a messages array.");
   });
 
   it("should generate React Router API route", async () => {
@@ -136,7 +139,7 @@ describe("generateApiRoute", () => {
 
     // Verify content includes Remix-compatible structure
     const content = readFileSync(writtenPath, "utf8");
-    expect(content).toContain("import { streamChat } from '~/lib/llm'");
+    expect(content).toContain("import { streamChat, type Message } from '~/lib/llm'");
     expect(content).toContain("export async function action");
   });
 

@@ -15,7 +15,7 @@ const QUICK_REPLIES = [
 ];
 
 export function Chat() {
-  const { messages, input, setInput, isLoading, sendMessage, stop } = useChat();
+  const { messages, input, setInput, isLoading, sendMessage, stop, error } = useChat();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,6 +81,11 @@ export function Chat() {
       </ScrollArea>
 
       <form onSubmit={handleSubmit} className="p-4 border-t">
+        {error ? (
+          <div className="mb-3 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {error.message}
+          </div>
+        ) : null}
         <div className="flex gap-2">
           <Input
             value={input}

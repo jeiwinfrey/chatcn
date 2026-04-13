@@ -91,7 +91,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        let message = `HTTP ${response.status}`;
+        try {
+          const payload = (await response.json()) as { error?: string };
+          if (payload?.error) message = payload.error;
+        } catch {
+          const text = await response.text();
+          if (text.trim()) message = text;
+        }
+        throw new Error(message);
       }
 
       const reader = response.body?.getReader();

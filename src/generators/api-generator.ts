@@ -97,20 +97,46 @@ function usesNextPagesRouter(cwd: string): boolean {
  * Returns the Next.js App Router API route template
  */
 function getNextAppRouterTemplate(): string {
-  return `import { streamChat } from '@/lib/llm';
+  return `import { streamChat, type Message } from '@/lib/llm';
 import { NextRequest } from 'next/server';
+
+function isMessageArray(value: unknown): value is Message[] {
+  return Array.isArray(value) && value.every((item) => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      "role" in item &&
+      "content" in item &&
+      typeof (item as { role?: unknown }).role === "string" &&
+      typeof (item as { content?: unknown }).content === "string"
+    );
+  });
+}
+
+function badRequest(message: string): Response {
+  return Response.json({ error: message }, { status: 400 });
+}
+
+function internalError(error: unknown): Response {
+  const message = error instanceof Error ? error.message : "Internal Server Error";
+  return Response.json({ error: message }, { status: 500 });
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
-    const stream = await streamChat(messages, req.signal);
+    const body = (await req.json().catch(() => null)) as { messages?: unknown } | null;
+    if (!body || !isMessageArray(body.messages)) {
+      return badRequest("Request body must include a messages array.");
+    }
+
+    const stream = await streamChat(body.messages, req.signal);
     
-    return new Response(stream, {
+    return new Response(stream.pipeThrough(new TextEncoderStream()), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   } catch (error) {
     console.error('Chat API error:', error);
-    return new Response('Internal Server Error', { status: 500 });
+    return internalError(error);
   }
 }
 `;
@@ -120,33 +146,54 @@ export async function POST(req: NextRequest) {
  * Returns the Next.js Pages Router API route template
  */
 function getNextPagesRouterTemplate(): string {
-  return `import { streamChat } from '@/lib/llm';
+  return `import { streamChat, type Message } from '@/lib/llm';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+function isMessageArray(value: unknown): value is Message[] {
+  return Array.isArray(value) && value.every((item) => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      "role" in item &&
+      "content" in item &&
+      typeof (item as { role?: unknown }).role === "string" &&
+      typeof (item as { content?: unknown }).content === "string"
+    );
+  });
+}
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method !== 'POST') {
-    return res.status(405).end();
+    return res.status(405).json({ error: 'Method not allowed' });
   }
   
   try {
-    const { messages } = req.body;
-    const stream = await streamChat(messages);
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    if (!body || !isMessageArray(body.messages)) {
+      return res.status(400).json({ error: 'Request body must include a messages array.' });
+    }
+
+    const stream = await streamChat(body.messages);
     
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     
     const reader = stream.getReader();
+    const encoder = new TextEncoder();
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      res.write(value);
+      res.write(encoder.encode(value));
     }
     res.end();
   } catch (error) {
     console.error('Chat API error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const message = error instanceof Error ? error.message : 'Internal Server Error';
+    res.status(500).json({ error: message });
   }
 }
 `;
@@ -156,20 +203,46 @@ export default async function handler(
  * Returns the Remix API route template
  */
 function getRemixTemplate(): string {
-  return `import { streamChat } from '~/lib/llm';
+  return `import { streamChat, type Message } from '~/lib/llm';
 import type { ActionFunctionArgs } from '@remix-run/node';
+
+function isMessageArray(value: unknown): value is Message[] {
+  return Array.isArray(value) && value.every((item) => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      "role" in item &&
+      "content" in item &&
+      typeof (item as { role?: unknown }).role === "string" &&
+      typeof (item as { content?: unknown }).content === "string"
+    );
+  });
+}
+
+function badRequest(message: string): Response {
+  return Response.json({ error: message }, { status: 400 });
+}
+
+function internalError(error: unknown): Response {
+  const message = error instanceof Error ? error.message : "Internal Server Error";
+  return Response.json({ error: message }, { status: 500 });
+}
 
 export async function action({ request }: ActionFunctionArgs) {
   try {
-    const { messages } = await request.json();
-    const stream = await streamChat(messages, request.signal);
+    const body = (await request.json().catch(() => null)) as { messages?: unknown } | null;
+    if (!body || !isMessageArray(body.messages)) {
+      return badRequest("Request body must include a messages array.");
+    }
+
+    const stream = await streamChat(body.messages, request.signal);
     
-    return new Response(stream, {
+    return new Response(stream.pipeThrough(new TextEncoderStream()), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   } catch (error) {
     console.error('Chat API error:', error);
-    return new Response('Internal Server Error', { status: 500 });
+    return internalError(error);
   }
 }
 `;

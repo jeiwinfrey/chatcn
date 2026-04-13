@@ -77,7 +77,7 @@ describe("api-generator e2e - framework-specific generation", () => {
       const content = readFileSync(filePath, "utf8");
 
       // Verify Next.js-specific imports
-      expect(content).toContain("import { streamChat } from '@/lib/llm'");
+      expect(content).toContain("import { streamChat, type Message } from '@/lib/llm'");
       expect(content).toContain("import { NextRequest } from 'next/server'");
       
       // Verify Next.js App Router export pattern
@@ -118,6 +118,7 @@ describe("api-generator e2e - framework-specific generation", () => {
       
       // Verify proper response headers
       expect(content).toContain("Content-Type");
+      expect(content).toContain("TextEncoderStream");
       expect(content).toContain("text/plain; charset=utf-8");
     });
   });
@@ -169,7 +170,7 @@ describe("api-generator e2e - framework-specific generation", () => {
       const content = readFileSync(filePath, "utf8");
 
       // Verify Remix-specific imports with tilde alias
-      expect(content).toContain("import { streamChat } from '~/lib/llm'");
+      expect(content).toContain("import { streamChat, type Message } from '~/lib/llm'");
       expect(content).toContain("import type { ActionFunctionArgs } from '@remix-run/node'");
       
       // Verify Remix action export pattern
@@ -210,6 +211,7 @@ describe("api-generator e2e - framework-specific generation", () => {
       
       // Verify proper response headers
       expect(content).toContain("Content-Type");
+      expect(content).toContain("TextEncoderStream");
       expect(content).toContain("text/plain; charset=utf-8");
     });
   });
@@ -336,8 +338,8 @@ describe("api-generator e2e - framework-specific generation", () => {
       const content = readFileSync(filePath, "utf8");
 
       // Next.js returns Response directly with stream
-      expect(content).toContain("return new Response(stream");
-      expect(content).toContain("const stream = await streamChat(messages, req.signal)");
+      expect(content).toContain("TextEncoderStream");
+      expect(content).toContain("const stream = await streamChat(body.messages, req.signal)");
     });
 
     it("should use Remix-specific streaming pattern", async () => {
@@ -360,8 +362,8 @@ describe("api-generator e2e - framework-specific generation", () => {
       const content = readFileSync(filePath, "utf8");
 
       // Remix returns Response directly with stream
-      expect(content).toContain("return new Response(stream");
-      expect(content).toContain("const stream = await streamChat(messages, request.signal)");
+      expect(content).toContain("TextEncoderStream");
+      expect(content).toContain("const stream = await streamChat(body.messages, request.signal)");
     });
 
     it("should include proper error handling for Next.js", async () => {
@@ -386,7 +388,7 @@ describe("api-generator e2e - framework-specific generation", () => {
       // Verify error handling
       expect(content).toContain("catch (error)");
       expect(content).toContain("console.error");
-      expect(content).toContain("status: 500");
+      expect(content).toContain("Response.json({ error: message }, { status: 500 })");
     });
 
     it("should include proper error handling for Remix", async () => {
@@ -411,7 +413,7 @@ describe("api-generator e2e - framework-specific generation", () => {
       // Verify error handling
       expect(content).toContain("catch (error)");
       expect(content).toContain("console.error");
-      expect(content).toContain("status: 500");
+      expect(content).toContain("Response.json({ error: message }, { status: 500 })");
     });
   });
 });
