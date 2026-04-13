@@ -12,12 +12,17 @@
     "url": "https://github.com/jeiwinfrey/chatcn/issues"
   },
   "author": "Jei Winfrey",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "chatcn": "./dist/index.js"
   },
   "files": [
     "dist",
-    "src/registry/templates"
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "build": "tsup",

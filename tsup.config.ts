@@ -1,6 +1,5 @@
 import { defineConfig } from "tsup";
 import { copyFileSync, cpSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -18,7 +17,10 @@ export default defineConfig({
     copyFileSync("src/registry/registry.json", "dist/registry/registry.json");
     
     // Copy template files to dist/registry/templates/
-    cpSync("src/registry/templates", "dist/registry/templates", { recursive: true });
+    cpSync("src/registry/templates", "dist/registry/templates", {
+      recursive: true,
+      filter: (source) => !source.endsWith(".test.ts"),
+    });
     
     console.log("✓ Copied registry.json and template files to dist/");
   },
