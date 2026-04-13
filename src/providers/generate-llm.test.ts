@@ -434,6 +434,24 @@ describe('generateLlmFile', () => {
   });
 
   describe('Common requirements across all formats', () => {
+    it('should use the selected model override when provided', () => {
+      const provider: Provider = {
+        name: 'openai',
+        label: 'OpenAI',
+        env: ['OPENAI_API_KEY'],
+        baseURL: 'https://api.openai.com/v1',
+        defaultModel: 'gpt-5-mini',
+        anthropicFormat: false,
+        googleFormat: false,
+        bedrockFormat: false,
+      };
+
+      const result = generateLlmFile(provider, 'gpt-5.1');
+
+      expect(result).toContain('Model: gpt-5.1');
+      expect(result).toContain('AI_MODEL ?? "gpt-5.1"');
+    });
+
     it('should include streamChat function in all formats', () => {
       const providers: Provider[] = [
         {
@@ -441,7 +459,7 @@ describe('generateLlmFile', () => {
           label: 'OpenAI',
           env: ['OPENAI_API_KEY'],
           baseURL: 'https://api.openai.com/v1',
-          defaultModel: 'gpt-4o-mini',
+          defaultModel: 'gpt-5-mini',
           anthropicFormat: false,
           googleFormat: false,
           bedrockFormat: false,
@@ -451,7 +469,7 @@ describe('generateLlmFile', () => {
           label: 'Anthropic (Claude)',
           env: ['ANTHROPIC_API_KEY'],
           baseURL: 'https://api.anthropic.com/v1',
-          defaultModel: 'claude-sonnet-4-5',
+          defaultModel: 'claude-3-5-haiku-latest',
           anthropicFormat: true,
           googleFormat: false,
           bedrockFormat: false,
@@ -461,7 +479,7 @@ describe('generateLlmFile', () => {
           label: 'Google Gemini',
           env: ['GOOGLE_API_KEY'],
           baseURL: 'https://generativelanguage.googleapis.com/v1beta',
-          defaultModel: 'gemini-2.0-flash',
+          defaultModel: 'gemini-2.5-flash-lite',
           anthropicFormat: false,
           googleFormat: true,
           bedrockFormat: false,
@@ -470,7 +488,7 @@ describe('generateLlmFile', () => {
           name: 'aws-bedrock',
           label: 'AWS Bedrock',
           env: ['AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'],
-          defaultModel: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+          defaultModel: 'anthropic.claude-haiku-4-5-20251001-v1:0',
           anthropicFormat: false,
           googleFormat: false,
           bedrockFormat: true,
@@ -492,7 +510,7 @@ describe('generateLlmFile', () => {
           label: 'OpenAI',
           env: ['OPENAI_API_KEY'],
           baseURL: 'https://api.openai.com/v1',
-          defaultModel: 'gpt-4o-mini',
+          defaultModel: 'gpt-5-mini',
           anthropicFormat: false,
           googleFormat: false,
           bedrockFormat: false,
@@ -502,7 +520,7 @@ describe('generateLlmFile', () => {
           label: 'Anthropic (Claude)',
           env: ['ANTHROPIC_API_KEY'],
           baseURL: 'https://api.anthropic.com/v1',
-          defaultModel: 'claude-sonnet-4-5',
+          defaultModel: 'claude-3-5-haiku-latest',
           anthropicFormat: true,
           googleFormat: false,
           bedrockFormat: false,
@@ -512,7 +530,7 @@ describe('generateLlmFile', () => {
           label: 'Google Gemini',
           env: ['GOOGLE_API_KEY'],
           baseURL: 'https://generativelanguage.googleapis.com/v1beta',
-          defaultModel: 'gemini-2.0-flash',
+          defaultModel: 'gemini-2.5-flash-lite',
           anthropicFormat: false,
           googleFormat: true,
           bedrockFormat: false,
@@ -521,7 +539,7 @@ describe('generateLlmFile', () => {
           name: 'aws-bedrock',
           label: 'AWS Bedrock',
           env: ['AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'],
-          defaultModel: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+          defaultModel: 'anthropic.claude-haiku-4-5-20251001-v1:0',
           anthropicFormat: false,
           googleFormat: false,
           bedrockFormat: true,
@@ -576,7 +594,7 @@ describe('generateLlmFile', () => {
           label: 'OpenAI',
           env: ['OPENAI_API_KEY'],
           baseURL: 'https://api.openai.com/v1',
-          defaultModel: 'gpt-4o-mini',
+          defaultModel: 'gpt-5-mini',
           anthropicFormat: false,
           googleFormat: false,
           bedrockFormat: false,
@@ -586,7 +604,7 @@ describe('generateLlmFile', () => {
           label: 'Anthropic (Claude)',
           env: ['ANTHROPIC_API_KEY'],
           baseURL: 'https://api.anthropic.com/v1',
-          defaultModel: 'claude-sonnet-4-5',
+          defaultModel: 'claude-3-5-haiku-latest',
           anthropicFormat: true,
           googleFormat: false,
           bedrockFormat: false,
@@ -596,7 +614,7 @@ describe('generateLlmFile', () => {
           label: 'Google Gemini',
           env: ['GOOGLE_API_KEY'],
           baseURL: 'https://generativelanguage.googleapis.com/v1beta',
-          defaultModel: 'gemini-2.0-flash',
+          defaultModel: 'gemini-2.5-flash-lite',
           anthropicFormat: false,
           googleFormat: true,
           bedrockFormat: false,
@@ -605,7 +623,7 @@ describe('generateLlmFile', () => {
           name: 'aws-bedrock',
           label: 'AWS Bedrock',
           env: ['AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'],
-          defaultModel: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+          defaultModel: 'anthropic.claude-haiku-4-5-20251001-v1:0',
           anthropicFormat: false,
           googleFormat: false,
           bedrockFormat: true,

@@ -259,4 +259,19 @@ describe("add command e2e - overwrite flag", () => {
     expect(existsSync(join(testDir, "hooks", "use-chat.ts"))).toBe(true);
     expect(existsSync(join(testDir, "app", "api", "chat", "route.ts"))).toBe(true);
   });
+
+  it("should use a custom model when passed on the CLI", async () => {
+    await handleAdd({
+      cwd: testDir,
+      yes: true,
+      template: "chatbot-basic",
+      provider: "openai",
+      model: "gpt-5.1",
+      overwrite: false,
+    });
+
+    const llmContent = readFileSync(join(testDir, "lib", "llm.ts"), "utf8");
+    expect(llmContent).toContain("gpt-5.1");
+    expect(llmContent).toContain('AI_MODEL ?? "gpt-5.1"');
+  });
 });

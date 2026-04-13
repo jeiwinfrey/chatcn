@@ -40,6 +40,23 @@ describe("handleAdd", () => {
 
     // Create components directory
     mkdirSync(join(testDir, "components", "ui"), { recursive: true });
+
+    // Create the components required by chatbot-basic so the test stays local
+    writeFileSync(
+      join(testDir, "components", "ui", "button.tsx"),
+      "export const Button = () => null;",
+      "utf8"
+    );
+    writeFileSync(
+      join(testDir, "components", "ui", "input.tsx"),
+      "export const Input = () => null;",
+      "utf8"
+    );
+    writeFileSync(
+      join(testDir, "components", "ui", "scroll-area.tsx"),
+      "export const ScrollArea = () => null;",
+      "utf8"
+    );
   });
 
   afterEach(() => {
@@ -111,17 +128,14 @@ describe("handleAdd", () => {
       throw new Error("process.exit called");
     });
 
-    // This test verifies that the add command accepts the flags
-    // The actual file generation is tested in integration tests
-    await expect(
-      handleAdd({
-        cwd: testDir,
-        yes: true,
-        template: "chatbot-basic",
-        provider: "openai",
-      })
-    ).rejects.toThrow(); // Will throw due to missing template files in test env
+    await handleAdd({
+      cwd: testDir,
+      yes: true,
+      template: "chatbot-basic",
+      provider: "openai",
+    });
 
+    expect(mockExit).not.toHaveBeenCalled();
     mockExit.mockRestore();
   });
 });

@@ -89,7 +89,7 @@
       "label": "OpenAI",
       "env": ["OPENAI_API_KEY"],
       "baseURL": "https://api.openai.com/v1",
-      "defaultModel": "gpt-4o-mini",
+      "defaultModel": "gpt-5-mini",
       "anthropicFormat": false,
       "googleFormat": false,
       "bedrockFormat": false
@@ -99,7 +99,7 @@
       "label": "Anthropic (Claude)",
       "env": ["ANTHROPIC_API_KEY"],
       "baseURL": "https://api.anthropic.com/v1",
-      "defaultModel": "claude-sonnet-4-5",
+      "defaultModel": "claude-3-5-haiku-latest",
       "anthropicFormat": true,
       "googleFormat": false,
       "bedrockFormat": false
@@ -119,7 +119,7 @@
       "label": "Google Gemini",
       "env": ["GOOGLE_API_KEY"],
       "baseURL": "https://generativelanguage.googleapis.com/v1beta",
-      "defaultModel": "gemini-2.0-flash",
+      "defaultModel": "gemini-2.5-flash-lite",
       "anthropicFormat": false,
       "googleFormat": true,
       "bedrockFormat": false
@@ -128,7 +128,7 @@
       "name": "aws-bedrock",
       "label": "AWS Bedrock",
       "env": ["AWS_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"],
-      "defaultModel": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+      "defaultModel": "anthropic.claude-haiku-4-5-20251001-v1:0",
       "anthropicFormat": false,
       "googleFormat": false,
       "bedrockFormat": true
@@ -138,7 +138,7 @@
       "label": "Groq",
       "env": ["GROQ_API_KEY"],
       "baseURL": "https://api.groq.com/openai/v1",
-      "defaultModel": "llama-3.3-70b-versatile",
+      "defaultModel": "meta-llama/llama-4-scout-17b-16e-instruct",
       "anthropicFormat": false,
       "googleFormat": false,
       "bedrockFormat": false
@@ -148,7 +148,7 @@
       "label": "Together AI",
       "env": ["TOGETHER_API_KEY"],
       "baseURL": "https://api.together.xyz/v1",
-      "defaultModel": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "defaultModel": "deepseek-ai/DeepSeek-V3.1",
       "anthropicFormat": false,
       "googleFormat": false,
       "bedrockFormat": false
@@ -168,7 +168,7 @@
       "label": "xAI (Grok)",
       "env": ["XAI_API_KEY"],
       "baseURL": "https://api.x.ai/v1",
-      "defaultModel": "grok-3-mini",
+      "defaultModel": "grok-4.20-beta-latest-non-reasoning",
       "anthropicFormat": false,
       "googleFormat": false,
       "bedrockFormat": false
@@ -188,7 +188,7 @@
       "label": "Cerebras",
       "env": ["CEREBRAS_API_KEY"],
       "baseURL": "https://api.cerebras.ai/v1",
-      "defaultModel": "llama-3.3-70b",
+      "defaultModel": "gpt-oss-120b",
       "anthropicFormat": false,
       "googleFormat": false,
       "bedrockFormat": false
@@ -198,7 +198,7 @@
       "label": "Fireworks AI",
       "env": ["FIREWORKS_API_KEY"],
       "baseURL": "https://api.fireworks.ai/inference/v1",
-      "defaultModel": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+      "defaultModel": "accounts/fireworks/models/kimi-k2-thinking",
       "anthropicFormat": false,
       "googleFormat": false,
       "bedrockFormat": false

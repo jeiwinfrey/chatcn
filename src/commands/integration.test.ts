@@ -23,6 +23,21 @@ describe("Integration: Component Wiring", () => {
   let originalConsoleError: typeof console.error;
   let originalProcessExit: typeof process.exit;
 
+  function seedUiComponents(baseDir: string, componentsDir: string, names: string[]) {
+    mkdirSync(join(baseDir, componentsDir, "ui"), { recursive: true });
+
+    for (const name of names) {
+      const exportName = name
+        .split("-")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join("");
+      writeFileSync(
+        join(baseDir, componentsDir, "ui", `${name}.tsx`),
+        `export const ${exportName} = () => null;`
+      );
+    }
+  }
+
   beforeEach(() => {
     // Create a temporary test directory
     testDir = join(tmpdir(), `chatcn-test-${Date.now()}`);
@@ -94,13 +109,10 @@ describe("Integration: Component Wiring", () => {
       );
 
       // Create components directory structure
-      mkdirSync(join(testDir, "components", "ui"), { recursive: true });
       mkdirSync(join(testDir, "lib"), { recursive: true });
 
-      // Create required shadcn components (button, input, card)
-      writeFileSync(join(testDir, "components", "ui", "button.tsx"), "export const Button = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "input.tsx"), "export const Input = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "card.tsx"), "export const Card = () => null;");
+      // Create required shadcn components for chatbot-basic
+      seedUiComponents(testDir, "components", ["button", "input", "scroll-area"]);
 
       // Execute: Run init command with --yes flag
       await handleInit({
@@ -206,13 +218,10 @@ describe("Integration: Component Wiring", () => {
       );
 
       // Create components directory structure
-      mkdirSync(join(testDir, "app", "components", "ui"), { recursive: true });
       mkdirSync(join(testDir, "app", "lib"), { recursive: true });
 
-      // Create required shadcn components
-      writeFileSync(join(testDir, "app", "components", "ui", "button.tsx"), "export const Button = () => null;");
-      writeFileSync(join(testDir, "app", "components", "ui", "input.tsx"), "export const Input = () => null;");
-      writeFileSync(join(testDir, "app", "components", "ui", "card.tsx"), "export const Card = () => null;");
+      // Create required shadcn components for chatbot-basic
+      seedUiComponents(testDir, "app/components", ["button", "input", "scroll-area"]);
 
       // Execute: Run init command
       await handleInit({
@@ -271,15 +280,17 @@ describe("Integration: Component Wiring", () => {
       );
 
       // Create components directory structure
-      mkdirSync(join(testDir, "components", "ui"), { recursive: true });
       mkdirSync(join(testDir, "lib"), { recursive: true });
 
-      // Create required shadcn components
-      writeFileSync(join(testDir, "components", "ui", "button.tsx"), "export const Button = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "input.tsx"), "export const Input = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "card.tsx"), "export const Card = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "scroll-area.tsx"), "export const ScrollArea = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "avatar.tsx"), "export const Avatar = () => null;");
+      // Create required shadcn components for chatbot-ui
+      seedUiComponents(testDir, "components", [
+        "button",
+        "input",
+        "scroll-area",
+        "card",
+        "avatar",
+        "skeleton",
+      ]);
 
       // Execute: Run add command
       await handleAdd({
@@ -357,13 +368,10 @@ describe("Integration: Component Wiring", () => {
       );
 
       // Create components directory structure
-      mkdirSync(join(testDir, "components", "ui"), { recursive: true });
       mkdirSync(join(testDir, "lib"), { recursive: true });
 
-      // Create required shadcn components
-      writeFileSync(join(testDir, "components", "ui", "button.tsx"), "export const Button = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "input.tsx"), "export const Input = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "card.tsx"), "export const Card = () => null;");
+      // Create required shadcn components for chatbot-basic
+      seedUiComponents(testDir, "components", ["button", "input", "scroll-area"]);
 
       // Create an existing LLM file
       const existingLlmContent = "// Existing LLM file";
@@ -421,13 +429,10 @@ describe("Integration: Component Wiring", () => {
       );
 
       // Create components directory structure
-      mkdirSync(join(testDir, "components", "ui"), { recursive: true });
       mkdirSync(join(testDir, "lib"), { recursive: true });
 
-      // Create required shadcn components
-      writeFileSync(join(testDir, "components", "ui", "button.tsx"), "export const Button = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "input.tsx"), "export const Input = () => null;");
-      writeFileSync(join(testDir, "components", "ui", "card.tsx"), "export const Card = () => null;");
+      // Create required shadcn components for chatbot-basic
+      seedUiComponents(testDir, "components", ["button", "input", "scroll-area"]);
 
       // Create an existing LLM file
       const existingLlmContent = "// Existing LLM file";
@@ -536,6 +541,9 @@ describe("Integration: Component Wiring", () => {
         join(testDir, "components.json"),
         JSON.stringify(componentsJson, null, 2)
       );
+
+      // Create required shadcn components for chatbot-basic
+      seedUiComponents(testDir, "components", ["button", "input", "scroll-area"]);
 
       // Execute: Run init command with invalid provider
       await handleInit({

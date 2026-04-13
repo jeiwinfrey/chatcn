@@ -269,7 +269,22 @@ describe("init command e2e", () => {
     // Verify OpenAI-specific configuration
     expect(llmContent).toContain("https://api.openai.com/v1");
     expect(llmContent).toContain("OPENAI_API_KEY");
-    expect(llmContent).toContain("gpt-4o-mini");
+    expect(llmContent).toContain("gpt-5-mini");
+  });
+
+  it("should respect a custom model passed on the CLI", async () => {
+    await handleInit({
+      cwd: testDir,
+      yes: true,
+      template: "chatbot-basic",
+      provider: "openai",
+      model: "gpt-5.1",
+    });
+
+    const llmPath = join(testDir, "lib", "llm.ts");
+    const llmContent = readFileSync(llmPath, "utf8");
+    expect(llmContent).toContain("gpt-5.1");
+    expect(llmContent).toContain('AI_MODEL ?? "gpt-5.1"');
   });
 
   it("should generate API route with correct framework-specific implementation", async () => {

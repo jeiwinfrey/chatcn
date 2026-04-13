@@ -75,6 +75,57 @@ describe("loadShadcnConfig", () => {
     });
   });
 
+  it("should parse Remix-style tilde aliases into app paths", () => {
+    const config = {
+      aliases: {
+        components: "~/components",
+        utils: "~/lib/utils",
+      },
+    };
+    writeFileSync(
+      join(TEST_DIR, "components.json"),
+      JSON.stringify(config, null, 2)
+    );
+
+    const result = loadShadcnConfig(TEST_DIR);
+    expect(result).toEqual({
+      componentsPath: "app/components",
+      libPath: "app/lib",
+      aliases: {
+        components: "~/components",
+        utils: "~/lib/utils",
+      },
+    });
+  });
+
+  it("should prefer resolvedPaths when available", () => {
+    const config = {
+      aliases: {
+        components: "~/components",
+        utils: "~/lib/utils",
+      },
+      resolvedPaths: {
+        components: "app/components",
+        lib: "app/lib",
+        utils: "app/lib/utils",
+      },
+    };
+    writeFileSync(
+      join(TEST_DIR, "components.json"),
+      JSON.stringify(config, null, 2)
+    );
+
+    const result = loadShadcnConfig(TEST_DIR);
+    expect(result).toEqual({
+      componentsPath: "app/components",
+      libPath: "app/lib",
+      aliases: {
+        components: "~/components",
+        utils: "~/lib/utils",
+      },
+    });
+  });
+
   it("should use default aliases when not specified", () => {
     const config = {};
     writeFileSync(

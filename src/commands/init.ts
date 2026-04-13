@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { getFramework } from "../utils/get-framework.js";
 import { getPackageManager } from "../utils/get-package-manager.js";
@@ -16,6 +16,8 @@ import { generateApiRoute } from "../generators/api-generator.js";
 import { resolvePath } from "../utils/path-resolver.js";
 import { writeFile } from "../utils/write-file.js";
 import { logger } from "../utils/logger.js";
+import { promptModel } from "../prompts/model-prompt.js";
+import { printNextSteps } from "../utils/next-steps.js";
 import type { PathContext } from "../utils/path-resolver.js";
 
 interface InitOptions {
@@ -24,6 +26,7 @@ interface InitOptions {
   overwrite?: boolean;
   template?: string;
   provider?: string;
+  model?: string;
 }
 
 /**
@@ -43,6 +46,7 @@ interface InitOptions {
  * @param options.overwrite - Overwrite existing files
  * @param options.template - Template name (skips prompt if provided)
  * @param options.provider - Provider name (skips prompt if provided)
+ * @param options.model - Model name (skips prompt if provided)
  * 
  * @example
  * ```ts
@@ -138,7 +142,15 @@ export async function handleInit(options: InitOptions): Promise<void> {
       process.exit(1);
     }
 
-    // 6. Identify missing shadcn components
+    // 6. Prompt for model selection (unless provided via flag or --yes)
+    let selectedModel = options.model?.trim();
+    if (!selectedModel) {
+      selectedModel = options.yes
+        ? provider.defaultModel
+        : await promptModel(provider);
+    }
+
+    // 7. Identify missing shadcn components
     const missingComponents = template.shadcnDeps.filter((dep) => {
       const componentPath = join(
         cwd,
@@ -149,7 +161,7 @@ export async function handleInit(options: InitOptions): Promise<void> {
       return !existsSync(componentPath);
     });
 
-    // 7. Prompt for shadcn component installation (unless --yes flag)
+    // 8. Prompt for shadcn component installation (unless --yes flag)
     if (missingComponents.length > 0) {
       let shouldInstall = options.yes;
 
@@ -167,7 +179,7 @@ export async function handleInit(options: InitOptions): Promise<void> {
         shouldInstall = installChoice;
       }
 
-      // 8. Install missing shadcn components
+      // 9. Install missing shadcn components
       if (shouldInstall) {
         const spinner = p.spinner();
         spinner.start("Installing shadcn components...");
@@ -195,9 +207,9 @@ export async function handleInit(options: InitOptions): Promise<void> {
     const filesSkipped: string[] = [];
     const filesErrored: string[] = [];
 
-    // 9. Generate LLM file
+    // 10. Generate LLM file
     p.log.step("Generating LLM file...");
-    const llmContent = generateLlmFile(provider);
+    const llmContent = generateLlmFile(provider, selectedModel);
     const llmPath = resolvePath("{{lib}}/llm.ts", context);
     const llmWritten = writeFile(llmPath, llmContent, options.overwrite);
     if (llmWritten) {
@@ -206,7 +218,7 @@ export async function handleInit(options: InitOptions): Promise<void> {
       filesSkipped.push(llmPath);
     }
 
-    // 10. Generate component files
+    // 11. Generate component files
     p.log.step("Generating component files...");
     const componentResults = await generateComponentFiles(
       template,
@@ -224,7 +236,7 @@ export async function handleInit(options: InitOptions): Promise<void> {
       }
     }
 
-    // 11. Generate hook files
+    // 12. Generate hook files
     p.log.step("Generating hook files...");
     const hookResults = await generateHookFiles(
       template,
@@ -242,7 +254,7 @@ export async function handleInit(options: InitOptions): Promise<void> {
       }
     }
 
-    // 12. Generate API route (if template requires backend)
+    // 13. Generate API route (if template requires backend)
     if (template.requiresBackend) {
       p.log.step("Generating API route...");
       const apiResult = await generateApiRoute(
@@ -264,22 +276,17 @@ export async function handleInit(options: InitOptions): Promise<void> {
       }
     }
 
-    // 13. Generate .env.example with provider environment variables
+    // 14. Generate .env.example with provider environment variables
     p.log.step("Generating .env.example...");
     const envExamplePath = join(cwd, ".env.example");
     const envContent = provider.env
       .map((envVar) => `${envVar}=your_${envVar.toLowerCase()}_here`)
       .join("\n");
-    
-    // Add AI_MODEL configuration with default as comment
-    const modelConfig = `# AI_MODEL=${provider.defaultModel}  # Optional: override the default model`;
+    const modelConfig = `# AI_MODEL=${selectedModel}  # Optional: override the generated default model`;
 
     if (existsSync(envExamplePath) && !options.overwrite) {
       // Append to existing .env.example
-      const existingContent = require("fs").readFileSync(
-        envExamplePath,
-        "utf-8"
-      );
+      const existingContent = readFileSync(envExamplePath, "utf-8");
       const newContent = `${existingContent}\n\n# Added by chatcn for ${provider.label}\n${envContent}\n${modelConfig}\n`;
       writeFileSync(envExamplePath, newContent, "utf-8");
       logger.info(`Updated ${envExamplePath}`);
@@ -290,7 +297,7 @@ export async function handleInit(options: InitOptions): Promise<void> {
       logger.success(`Created ${envExamplePath}`);
     }
 
-    // 14. Display summary of files written
+    // 15. Display summary of files written
     p.outro("Setup complete!");
 
     if (filesWritten.length > 0) {
@@ -309,16 +316,15 @@ export async function handleInit(options: InitOptions): Promise<void> {
       filesErrored.forEach((file) => console.log(`  - ${file}`));
     }
 
-    // 15. Display next steps for user
-    console.log("\n📝 Next steps:");
-    console.log(`  1. Set environment variables in .env:`);
-    provider.env.forEach((envVar) => {
-      console.log(`     ${envVar}=your_key_here`);
+    // 16. Display next steps for user
+    printNextSteps({
+      cwd,
+      packageManager,
+      template,
+      provider,
+      selectedModel,
+      context,
     });
-    console.log(`  2. Import and render the chatbot component in your page`);
-    console.log(
-      `  3. Start your development server and test the chatbot\n`
-    );
   } catch (error) {
     p.log.error(
       `Unexpected error: ${error instanceof Error ? error.message : String(error)}`

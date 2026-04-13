@@ -50,6 +50,36 @@ describe("generateApiRoute", () => {
     expect(content).toContain("await streamChat(messages, req.signal)");
   });
 
+  it("should generate Next.js Pages Router API route when pages exists", async () => {
+    mkdirSync(join(testDir, "pages"), { recursive: true });
+
+    const context: PathContext = {
+      framework: "next",
+      shadcnConfig: {
+        componentsPath: "components",
+        libPath: "lib",
+        aliases: {
+          components: "@/components",
+          utils: "@/lib/utils",
+        },
+      },
+      cwd: testDir,
+    };
+
+    const result = await generateApiRoute("next", context, false);
+
+    expect(result.status).toBe("written");
+    expect(result.path).toContain("pages/api/chat.ts");
+
+    const writtenPath = join(testDir, "pages/api/chat.ts");
+    expect(existsSync(writtenPath)).toBe(true);
+
+    const content = readFileSync(writtenPath, "utf8");
+    expect(content).toContain("import { streamChat } from '@/lib/llm'");
+    expect(content).toContain("import type { NextApiRequest, NextApiResponse } from 'next'");
+    expect(content).toContain("export default async function handler");
+  });
+
   it("should generate Remix API route", async () => {
     const context: PathContext = {
       framework: "remix",

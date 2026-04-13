@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { Framework } from "../utils/get-framework.js";
 import type { PathContext } from "../utils/path-resolver.js";
 import { resolvePath } from "../utils/path-resolver.js";
@@ -29,9 +31,14 @@ export async function generateApiRoute(
     
     switch (framework) {
       case "next":
-        // Next.js App Router
-        template = getNextAppRouterTemplate();
-        templatePath = "app/api/chat/route.ts";
+        // Prefer Pages Router when the project only has a pages directory.
+        if (usesNextPagesRouter(context.cwd)) {
+          template = getNextPagesRouterTemplate();
+          templatePath = "pages/api/chat.ts";
+        } else {
+          template = getNextAppRouterTemplate();
+          templatePath = "app/api/chat/route.ts";
+        }
         break;
         
       case "remix":
@@ -76,6 +83,14 @@ export async function generateApiRoute(
       message: errorMessage,
     };
   }
+}
+
+function usesNextPagesRouter(cwd: string): boolean {
+  const appDir = join(cwd, "app");
+  const pagesDir = join(cwd, "pages");
+
+  if (existsSync(appDir)) return false;
+  return existsSync(pagesDir);
 }
 
 /**

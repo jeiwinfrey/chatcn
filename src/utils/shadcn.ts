@@ -12,6 +12,25 @@ export interface ShadcnConfig {
   };
 }
 
+function normalizeAliasPath(
+  alias: string,
+  framework?: string
+): string {
+  if (alias.startsWith("@/")) {
+    return alias.slice(2);
+  }
+
+  if (alias.startsWith("~/")) {
+    const path = alias.slice(2);
+    if (framework === "remix" || framework === "react-router") {
+      return path.startsWith("app/") ? path : `app/${path}`;
+    }
+    return path;
+  }
+
+  return alias;
+}
+
 /**
  * Checks if shadcn is initialized in the project by looking for components.json.
  * 
@@ -109,8 +128,11 @@ export function loadShadcnConfig(cwd: string): ShadcnConfig | null {
     
     // Extract aliases from the config
     const aliases = config.aliases || {};
-    const componentsAlias = aliases.components || "@/components";
-    const utilsAlias = aliases.utils || "@/lib/utils";
+    const componentsAlias =
+      typeof aliases.components === "string" ? aliases.components : "@/components";
+    const utilsAlias =
+      typeof aliases.utils === "string" ? aliases.utils : "@/lib/utils";
+    const frameworkHint = componentsAlias.startsWith("~/") ? "remix" : undefined;
     
     // Try to get the actual resolved paths from the config
     // shadcn v2+ includes resolvedPaths which has the actual filesystem paths
@@ -118,16 +140,20 @@ export function loadShadcnConfig(cwd: string): ShadcnConfig | null {
     
     let componentsPath: string;
     let libPath: string;
-    
-    if (resolvedPaths.components) {
+
+    if (resolvedPaths.components || resolvedPaths.lib || resolvedPaths.utils) {
       // Use resolved paths if available (shadcn v2+)
-      componentsPath = resolvedPaths.components;
-      libPath = resolvedPaths.utils?.replace(/\/utils\.ts$/, "") || resolvedPaths.lib || "lib";
+      componentsPath =
+        resolvedPaths.components || normalizeAliasPath(componentsAlias, frameworkHint);
+      libPath =
+        resolvedPaths.lib ||
+        resolvedPaths.utils?.replace(/\/utils(?:\.ts)?$/, "") ||
+        normalizeAliasPath(utilsAlias, frameworkHint).replace(/\/utils$/, "");
     } else {
       // Fall back to extracting from aliases (shadcn v1)
       // Just remove the @/ prefix - the framework defaults will be used if this doesn't work
-      componentsPath = componentsAlias.replace(/^@\//, "");
-      libPath = utilsAlias.replace(/^@\//, "").replace(/\/utils$/, "");
+      componentsPath = normalizeAliasPath(componentsAlias, frameworkHint);
+      libPath = normalizeAliasPath(utilsAlias, frameworkHint).replace(/\/utils$/, "");
     }
     
     return {

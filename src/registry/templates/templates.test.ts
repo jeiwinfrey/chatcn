@@ -13,9 +13,15 @@ import { join } from "path";
  * - Can be type-checked in a simulated project environment
  */
 
+const TEMPLATE_DIRS = [
+  "chatbot-basic",
+  "chatbot-ui",
+  "chatbot-assistant",
+  "chatbot-support",
+];
+
 describe("Template File Syntax Validation", () => {
   const templatesDir = join(process.cwd(), "src/registry/templates");
-  const templateDirs = ["chatbot-basic", "chatbot-ui", "chatbot-assistant", "chatbot-support"];
 
   describe("Template file existence", () => {
     it("should have all required template directories", () => {
@@ -24,13 +30,13 @@ describe("Template File Syntax Validation", () => {
         return statSync(fullPath).isDirectory();
       });
 
-      for (const templateDir of templateDirs) {
+      for (const templateDir of TEMPLATE_DIRS) {
         expect(dirs).toContain(templateDir);
       }
     });
 
     it("should have at least one file in each template directory", () => {
-      for (const templateDir of templateDirs) {
+      for (const templateDir of TEMPLATE_DIRS) {
         const files = readdirSync(join(templatesDir, templateDir));
         expect(files.length).toBeGreaterThan(0);
       }
@@ -243,18 +249,25 @@ function getAllTemplateFiles(): string[] {
   const files: string[] = [];
 
   function walkDir(dir: string) {
+    if (!statSync(dir).isDirectory()) return;
+
     const entries = readdirSync(dir);
     for (const entry of entries) {
       const fullPath = join(dir, entry);
       const stat = statSync(fullPath);
       if (stat.isDirectory()) {
         walkDir(fullPath);
-      } else if ((entry.endsWith(".ts") || entry.endsWith(".tsx")) && !entry.endsWith(".test.ts")) {
+      } else if (
+        (entry.endsWith(".ts") || entry.endsWith(".tsx")) &&
+        !entry.endsWith(".test.ts")
+      ) {
         files.push(fullPath);
       }
     }
   }
 
-  walkDir(templatesDir);
+  for (const templateDir of TEMPLATE_DIRS) {
+    walkDir(join(templatesDir, templateDir));
+  }
   return files;
 }

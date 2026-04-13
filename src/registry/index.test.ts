@@ -55,6 +55,26 @@ describe('Registry Validation', () => {
       expect(providerNames).toContain('fireworks');
     });
 
+    it('should expose refreshed default models for each provider', () => {
+      const registry = loadRegistry();
+      const providers = Object.fromEntries(
+        registry.providers.map((provider) => [provider.name, provider.defaultModel])
+      );
+
+      expect(providers.openai).toBe('gpt-5-mini');
+      expect(providers.anthropic).toBe('claude-3-5-haiku-latest');
+      expect(providers.openrouter).toBe('openrouter/auto');
+      expect(providers.google).toBe('gemini-2.5-flash-lite');
+      expect(providers['aws-bedrock']).toBe('anthropic.claude-haiku-4-5-20251001-v1:0');
+      expect(providers.groq).toBe('meta-llama/llama-4-scout-17b-16e-instruct');
+      expect(providers.together).toBe('deepseek-ai/DeepSeek-V3.1');
+      expect(providers.mistral).toBe('mistral-small-latest');
+      expect(providers.xai).toBe('grok-4.20-beta-latest-non-reasoning');
+      expect(providers.deepseek).toBe('deepseek-chat');
+      expect(providers.cerebras).toBe('gpt-oss-120b');
+      expect(providers.fireworks).toBe('accounts/fireworks/models/kimi-k2-thinking');
+    });
+
     it('should validate registry schema with all required template fields', () => {
       const registry = loadRegistry();
       const template = registry.templates[0];
