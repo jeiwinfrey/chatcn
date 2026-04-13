@@ -1,0 +1,44 @@
+{
+  "name": "chatcn",
+  "version": "0.1.0",
+  "description": "Scaffold AI chatbot templates into your shadcn project",
+  "type": "module",
+  "bin": {
+    "chatcn": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "src/registry/templates"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "commander": "^12.1.0",
+    "execa": "^9.5.2",
+    "fast-glob": "^3.3.3",
+    "kleur": "^4.1.5",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "shadcn",
+    "chatbot",
+    "ai",
+    "cli",
+    "scaffold"
+  ],
+  "license": "MIT"
+}
