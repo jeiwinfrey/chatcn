@@ -23,6 +23,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
+    "test:watch": "vitest",
     "test:install": "./test-global-install.sh",
     "test:commands": "./test-cli-commands.sh",
     "typecheck": "tsc --noEmit"

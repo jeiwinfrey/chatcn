@@ -415,6 +415,13 @@ npm test
 npm run build
 ```
 
+## Contributing
+
+If you want to help improve chatcn, start here:
+
+- [Contributing Guide](CONTRIBUTING.md)
+- [Issue Tracker](https://github.com/jeiwinfrey/chatcn/issues)
+
 ### Running Tests
 
 ```bash
@@ -433,4 +440,4 @@ npm run build
 
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE).
