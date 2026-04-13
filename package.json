@@ -16,7 +16,7 @@
     "access": "public"
   },
   "bin": {
-    "chatcn": "dist/index.js"
+    "chatcn": "./dist/index.js"
   },
   "files": [
     "dist",
