@@ -34,7 +34,20 @@ export function resolvePath(
   
   // Replace {{components}} placeholder
   if (resolvedPath.includes("{{components}}")) {
-    const componentsPath = shadcnConfig?.componentsPath ?? frameworkPaths.components;
+    // Use shadcn config if available, but validate it makes sense
+    let componentsPath = frameworkPaths.components;
+    
+    if (shadcnConfig?.componentsPath) {
+      // If shadcn config has a components path, use it
+      // But if it's just "components" and framework expects "src/components",
+      // prepend "src/" to match the framework convention
+      if (shadcnConfig.componentsPath === "components" && frameworkPaths.components.startsWith("src/")) {
+        componentsPath = "src/components";
+      } else {
+        componentsPath = shadcnConfig.componentsPath;
+      }
+    }
+    
     resolvedPath = resolvedPath.replace("{{components}}", componentsPath);
   }
   
@@ -45,7 +58,17 @@ export function resolvePath(
   
   // Replace {{lib}} placeholder
   if (resolvedPath.includes("{{lib}}")) {
-    const libPath = shadcnConfig?.libPath ?? frameworkPaths.lib;
+    let libPath = frameworkPaths.lib;
+    
+    if (shadcnConfig?.libPath) {
+      // Same logic as components - validate it makes sense
+      if (shadcnConfig.libPath === "lib" && frameworkPaths.lib.startsWith("src/")) {
+        libPath = "src/lib";
+      } else {
+        libPath = shadcnConfig.libPath;
+      }
+    }
+    
     resolvedPath = resolvedPath.replace("{{lib}}", libPath);
   }
   
