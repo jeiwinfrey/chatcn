@@ -23,6 +23,38 @@ export interface UseChatReturn {
   stop: () => void;
 }
 
+/**
+ * React hook for managing support chat state and streaming responses from an AI API.
+ * 
+ * Handles message history, input state, loading state, and streaming responses.
+ * Supports aborting in-flight requests. Designed for customer support chatbot interfaces.
+ * 
+ * @param options - Configuration options for the support chat hook
+ * @param options.api - API endpoint for chat requests (default: '/api/chat')
+ * @param options.initialMessages - Initial message history (default: [])
+ * @param options.onError - Error callback function
+ * @returns Object containing chat state and control functions
+ * 
+ * @example
+ * ```tsx
+ * function SupportChatComponent() {
+ *   const { messages, input, setInput, sendMessage, isLoading } = useChat({
+ *     api: '/api/chat',
+ *     onError: (error) => console.error('Support chat error:', error)
+ *   });
+ * 
+ *   return (
+ *     <div>
+ *       {messages.map((msg, i) => (
+ *         <div key={i}>{msg.role}: {msg.content}</div>
+ *       ))}
+ *       <input value={input} onChange={(e) => setInput(e.target.value)} />
+ *       <button onClick={sendMessage} disabled={isLoading}>Send</button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const { api = "/api/chat", initialMessages = [], onError } = options;
 

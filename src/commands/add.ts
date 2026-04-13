@@ -28,6 +28,35 @@ interface AddOptions {
   provider?: string;
 }
 
+/**
+ * Handles the 'chatcn add' command to add a chatbot template to the project.
+ * 
+ * Similar to init but designed for adding templates with explicit flags.
+ * This function:
+ * - Detects the project environment (framework, package manager)
+ * - Verifies shadcn is initialized
+ * - Validates or prompts for template and provider
+ * - Installs missing shadcn components
+ * - Generates LLM file, components, hooks, and API routes
+ * - Updates .env.example with required environment variables
+ * 
+ * @param options - Configuration options for the add command
+ * @param options.cwd - The current working directory (project root)
+ * @param options.yes - Skip all prompts and use defaults
+ * @param options.overwrite - Overwrite existing files
+ * @param options.template - Template name (prompts if not provided)
+ * @param options.provider - Provider name (prompts if not provided)
+ * 
+ * @example
+ * ```ts
+ * await handleAdd({
+ *   cwd: process.cwd(),
+ *   template: 'chatbot-ui',
+ *   provider: 'anthropic',
+ *   overwrite: true
+ * });
+ * ```
+ */
 export async function handleAdd(options: AddOptions): Promise<void> {
   p.intro("chatcn add");
 

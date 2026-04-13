@@ -26,6 +26,34 @@ interface InitOptions {
   provider?: string;
 }
 
+/**
+ * Handles the 'chatcn init' command to scaffold a chatbot into the project.
+ * 
+ * This function:
+ * - Detects the project environment (framework, package manager)
+ * - Verifies shadcn is initialized
+ * - Prompts for template and provider selection
+ * - Installs missing shadcn components
+ * - Generates LLM file, components, hooks, and API routes
+ * - Creates .env.example with required environment variables
+ * 
+ * @param options - Configuration options for the init command
+ * @param options.cwd - The current working directory (project root)
+ * @param options.yes - Skip all prompts and use defaults
+ * @param options.overwrite - Overwrite existing files
+ * @param options.template - Template name (skips prompt if provided)
+ * @param options.provider - Provider name (skips prompt if provided)
+ * 
+ * @example
+ * ```ts
+ * await handleInit({
+ *   cwd: process.cwd(),
+ *   yes: true,
+ *   template: 'chatbot-basic',
+ *   provider: 'openai'
+ * });
+ * ```
+ */
 export async function handleInit(options: InitOptions): Promise<void> {
   p.intro("chatcn init");
 

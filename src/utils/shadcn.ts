@@ -12,13 +12,35 @@ export interface ShadcnConfig {
   };
 }
 
-/** Returns true if shadcn appears to be initialized in the project */
+/**
+ * Checks if shadcn is initialized in the project by looking for components.json.
+ * 
+ * @param cwd - The current working directory (project root)
+ * @returns true if components.json exists, false otherwise
+ * 
+ * @example
+ * ```ts
+ * if (!isShadcnInitialized(process.cwd())) {
+ *   console.log('Please run: npx shadcn@latest init');
+ * }
+ * ```
+ */
 export function isShadcnInitialized(cwd: string): boolean {
   // shadcn writes components.json at project root
   return existsSync(join(cwd, "components.json"));
 }
 
-/** Runs `shadcn@latest init` in cwd */
+/**
+ * Runs the shadcn init command in the specified directory.
+ * 
+ * @param cwd - The current working directory (project root)
+ * @param pm - The package manager to use (npm, pnpm, bun, yarn)
+ * 
+ * @example
+ * ```ts
+ * await runShadcnInit(process.cwd(), 'npm');
+ * ```
+ */
 export async function runShadcnInit(
   cwd: string,
   pm: PackageManager
@@ -30,7 +52,18 @@ export async function runShadcnInit(
   });
 }
 
-/** Installs shadcn components into the user's project */
+/**
+ * Installs shadcn components into the user's project using the shadcn CLI.
+ * 
+ * @param components - Array of component names to install (e.g., ['button', 'input'])
+ * @param cwd - The current working directory (project root)
+ * @param pm - The package manager to use (npm, pnpm, bun, yarn)
+ * 
+ * @example
+ * ```ts
+ * await addShadcnComponents(['button', 'input', 'card'], process.cwd(), 'npm');
+ * ```
+ */
 export async function addShadcnComponents(
   components: string[],
   cwd: string,
@@ -46,9 +79,20 @@ export async function addShadcnComponents(
 }
 
 /**
- * Loads and parses the shadcn configuration from components.json
+ * Loads and parses the shadcn configuration from components.json.
+ * Extracts component paths, lib paths, and aliases.
+ * 
  * @param cwd - The project directory to search for components.json
- * @returns ShadcnConfig object or null if components.json not found
+ * @returns ShadcnConfig object with paths and aliases, or null if components.json not found
+ * 
+ * @example
+ * ```ts
+ * const config = loadShadcnConfig(process.cwd());
+ * if (config) {
+ *   console.log(config.componentsPath); // 'components' or 'src/components'
+ *   console.log(config.libPath); // 'lib' or 'src/lib'
+ * }
+ * ```
  */
 export function loadShadcnConfig(cwd: string): ShadcnConfig | null {
   const configPath = join(cwd, "components.json");

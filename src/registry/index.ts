@@ -8,6 +8,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 let _registry: Registry | null = null;
 
+/**
+ * Loads and validates the registry.json file containing templates and providers.
+ * Results are cached after the first load.
+ * 
+ * @returns The validated registry object
+ * @throws {ZodError} If the registry.json file fails validation
+ * 
+ * @example
+ * ```ts
+ * const registry = loadRegistry();
+ * console.log(registry.templates.length); // 4
+ * console.log(registry.providers.length); // 12
+ * ```
+ */
 export function loadRegistry(): Registry {
   if (_registry) return _registry;
   const registryPath = join(__dirname, "registry.json");
@@ -16,23 +30,84 @@ export function loadRegistry(): Registry {
   return _registry;
 }
 
+/**
+ * Finds a template by name in the registry.
+ * 
+ * @param name - The template name to search for
+ * @returns The template object if found, undefined otherwise
+ * 
+ * @example
+ * ```ts
+ * const template = getTemplate('chatbot-basic');
+ * if (template) {
+ *   console.log(template.description);
+ * }
+ * ```
+ */
 export function getTemplate(name: string): Template | undefined {
   return loadRegistry().templates.find((t) => t.name === name);
 }
 
+/**
+ * Finds a provider by name in the registry.
+ * 
+ * @param name - The provider name to search for
+ * @returns The provider object if found, undefined otherwise
+ * 
+ * @example
+ * ```ts
+ * const provider = getProvider('openai');
+ * if (provider) {
+ *   console.log(provider.label); // 'OpenAI'
+ * }
+ * ```
+ */
 export function getProvider(name: string): Provider | undefined {
   return loadRegistry().providers.find((p) => p.name === name);
 }
 
+/**
+ * Returns all available templates from the registry.
+ * 
+ * @returns Array of all template objects
+ * 
+ * @example
+ * ```ts
+ * const templates = listTemplates();
+ * templates.forEach(t => console.log(t.name));
+ * ```
+ */
 export function listTemplates(): Template[] {
   return loadRegistry().templates;
 }
 
+/**
+ * Returns all available providers from the registry.
+ * 
+ * @returns Array of all provider objects
+ * 
+ * @example
+ * ```ts
+ * const providers = listProviders();
+ * providers.forEach(p => console.log(p.label));
+ * ```
+ */
 export function listProviders(): Provider[] {
   return loadRegistry().providers;
 }
 
-/** Returns the absolute path to a template file inside the chatcn package */
+/** 
+ * Returns the absolute path to a template file inside the chatcn package.
+ * 
+ * @param fromPath - The relative path from the registry directory
+ * @returns The absolute path to the template file
+ * 
+ * @example
+ * ```ts
+ * const path = resolveTemplatePath('templates/chatbot-basic/chat.tsx');
+ * console.log(path); // '/path/to/chatcn/dist/registry/templates/chatbot-basic/chat.tsx'
+ * ```
+ */
 export function resolveTemplatePath(fromPath: string): string {
   return join(__dirname, fromPath);
 }

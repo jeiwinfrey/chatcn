@@ -32,6 +32,18 @@ function hasDep(
   return names.some((n) => n in deps);
 }
 
+/**
+ * Detects the frontend framework used in the project by examining package.json dependencies.
+ * 
+ * @param cwd - The current working directory (project root)
+ * @returns The detected framework or 'manual' if no framework is detected
+ * 
+ * @example
+ * ```ts
+ * const framework = getFramework(process.cwd());
+ * console.log(framework); // 'next' | 'vite' | 'remix' | etc.
+ * ```
+ */
 export function getFramework(cwd: string): Framework {
   const pkg = readPackageJson(cwd);
 
@@ -66,6 +78,18 @@ export type FrameworkPaths = {
   api: string | null;
 };
 
+/**
+ * Returns the default directory paths for a given framework.
+ * 
+ * @param framework - The framework to get paths for
+ * @returns Object containing default paths for components, lib, hooks, and API routes
+ * 
+ * @example
+ * ```ts
+ * const paths = getFrameworkPaths('next');
+ * console.log(paths.api); // 'app/api/chat/route.ts'
+ * ```
+ */
 export function getFrameworkPaths(framework: Framework): FrameworkPaths {
   switch (framework) {
     case "next":

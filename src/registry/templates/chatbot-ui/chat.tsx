@@ -1,0 +1,70 @@
+"use client";
+
+import { useChat } from "@/hooks/use-chat";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ChatMessage } from "@/components/chat-message";
+
+export function Chat() {
+  const { messages, input, setInput, isLoading, sendMessage, stop } = useChat();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  return (
+    <Card className="flex flex-col h-[600px] w-full max-w-2xl mx-auto">
+      <ScrollArea className="flex-1 p-4">
+        <div className="space-y-4">
+          {messages.map((message, index) => (
+            <ChatMessage key={index} message={message} />
+          ))}
+          {isLoading && messages[messages.length - 1]?.role === "user" && (
+            <div className="flex justify-start">
+              <div className="flex gap-3 max-w-[80%]">
+                <Skeleton className="h-10 w-10 rounded-full flex-shrink-0" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </ScrollArea>
+
+      <form onSubmit={handleSubmit} className="p-4 border-t">
+        <div className="flex gap-2">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message..."
+            disabled={isLoading}
+            className="flex-1"
+          />
+          {isLoading ? (
+            <Button type="button" onClick={stop} variant="outline">
+              Stop
+            </Button>
+          ) : (
+            <Button type="submit" disabled={!input.trim()}>
+              Send
+            </Button>
+          )}
+        </div>
+      </form>
+    </Card>
+  );
+}

@@ -117,9 +117,6 @@ describe("generateComponentFiles", () => {
 
     expect(results).toHaveLength(1);
     expect(results[0].status).toBe("skipped");
-    
-    // Clean up source file
-    rmSync(sourceDir, { recursive: true, force: true });
   });
 
   it("should overwrite existing files when overwrite is true", async () => {

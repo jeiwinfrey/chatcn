@@ -7,13 +7,13 @@ export type Message = {
   content: string;
 };
 
-export interface UseAssistantOptions {
+export interface UseChatOptions {
   api?: string;
   initialMessages?: Message[];
   onError?: (error: Error) => void;
 }
 
-export interface UseAssistantReturn {
+export interface UseChatReturn {
   messages: Message[];
   input: string;
   setInput: (input: string) => void;
@@ -24,12 +24,12 @@ export interface UseAssistantReturn {
 }
 
 /**
- * React hook for managing assistant chat state and streaming responses from an AI API.
+ * React hook for managing chat state and streaming responses from an AI API.
  * 
  * Handles message history, input state, loading state, and streaming responses.
- * Supports aborting in-flight requests. Designed for assistant-style chatbot interfaces.
+ * Supports aborting in-flight requests.
  * 
- * @param options - Configuration options for the assistant hook
+ * @param options - Configuration options for the chat hook
  * @param options.api - API endpoint for chat requests (default: '/api/chat')
  * @param options.initialMessages - Initial message history (default: [])
  * @param options.onError - Error callback function
@@ -37,10 +37,10 @@ export interface UseAssistantReturn {
  * 
  * @example
  * ```tsx
- * function AssistantComponent() {
- *   const { messages, input, setInput, sendMessage, isLoading } = useAssistant({
+ * function ChatComponent() {
+ *   const { messages, input, setInput, sendMessage, isLoading } = useChat({
  *     api: '/api/chat',
- *     onError: (error) => console.error('Assistant error:', error)
+ *     onError: (error) => console.error('Chat error:', error)
  *   });
  * 
  *   return (
@@ -55,7 +55,7 @@ export interface UseAssistantReturn {
  * }
  * ```
  */
-export function useAssistant(options: UseAssistantOptions = {}): UseAssistantReturn {
+export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const { api = "/api/chat", initialMessages = [], onError } = options;
 
   const [messages, setMessages] = useState<Message[]>(initialMessages);
