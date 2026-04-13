@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useChat } from "@/hooks/use-support-chat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,11 +16,17 @@ const QUICK_REPLIES = [
   "Account help",
 ];
 
+const SYSTEM_PROMPT = "__SYSTEM_PROMPT__";
+
 export function Chat() {
-  const systemPrompt = "__SYSTEM_PROMPT__";
   const { messages, input, setInput, isLoading, sendMessage, stop, error } = useChat({
-    systemPrompt,
+    systemPrompt: SYSTEM_PROMPT,
   });
+  const endRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +55,7 @@ export function Chat() {
         <div className="space-y-4">
           {messages.length === 0 && (
             <div className="text-center text-muted-foreground py-8">
+              <p className="mb-2 font-medium text-foreground">Welcome.</p>
               <p className="mb-4">Select a quick reply or type your question</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {QUICK_REPLIES.map((reply) => (
@@ -88,6 +96,7 @@ export function Chat() {
               </div>
             </div>
           )}
+          <div ref={endRef} />
         </div>
       </ScrollArea>
 
@@ -116,6 +125,9 @@ export function Chat() {
             </Button>
           )}
         </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Press Enter to send.
+        </p>
       </form>
     </Card>
   );

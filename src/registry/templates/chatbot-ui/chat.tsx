@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useChat } from "@/hooks/use-chat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,11 +9,18 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatMessage } from "@/components/chat-message";
 
+const SYSTEM_PROMPT = "__SYSTEM_PROMPT__";
+const EMPTY_STATE = "Start a conversation or ask a question.";
+
 export function Chat() {
-  const systemPrompt = "__SYSTEM_PROMPT__";
   const { messages, input, setInput, isLoading, sendMessage, stop, error } = useChat({
-    systemPrompt,
+    systemPrompt: SYSTEM_PROMPT,
   });
+  const endRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +38,12 @@ export function Chat() {
     <Card className="flex flex-col h-[600px] w-full max-w-2xl mx-auto">
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
+          {messages.length === 0 ? (
+            <div className="rounded-lg border border-dashed bg-muted/40 px-4 py-6 text-center text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">Welcome.</p>
+              <p className="mt-1">{EMPTY_STATE}</p>
+            </div>
+          ) : null}
           {messages.map((message, index) => (
             <ChatMessage key={index} message={message} />
           ))}
@@ -44,6 +58,7 @@ export function Chat() {
               </div>
             </div>
           )}
+          <div ref={endRef} />
         </div>
       </ScrollArea>
 
@@ -72,6 +87,9 @@ export function Chat() {
             </Button>
           )}
         </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Press Enter to send.
+        </p>
       </form>
     </Card>
   );

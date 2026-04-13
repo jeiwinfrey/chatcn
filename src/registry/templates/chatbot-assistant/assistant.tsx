@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useAssistant } from "@/hooks/use-assistant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,11 +9,18 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AssistantMessage } from "@/components/assistant-message";
 
+const SYSTEM_PROMPT = "__SYSTEM_PROMPT__";
+const EMPTY_STATE = "Ask for help, ideas, or a walkthrough.";
+
 export function Assistant() {
-  const systemPrompt = "__SYSTEM_PROMPT__";
   const { messages, input, setInput, isLoading, sendMessage, stop, error } = useAssistant({
-    systemPrompt,
+    systemPrompt: SYSTEM_PROMPT,
   });
+  const endRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,9 +43,27 @@ export function Assistant() {
 
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
+          {messages.length === 0 ? (
+            <div className="rounded-lg border border-dashed bg-muted/40 px-4 py-6 text-center text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">Welcome.</p>
+              <p className="mt-1">{EMPTY_STATE}</p>
+            </div>
+          ) : null}
           {messages.map((message, index) => (
             <AssistantMessage key={index} message={message} />
           ))}
+          {isLoading && messages[messages.length - 1]?.role === "user" && (
+            <div className="flex justify-start">
+              <div className="max-w-[80%] rounded-lg border bg-muted px-4 py-2">
+                <div className="space-y-2">
+                  <div className="h-4 w-24 animate-pulse rounded bg-foreground/20" />
+                  <div className="h-4 w-full animate-pulse rounded bg-foreground/20" />
+                  <div className="h-4 w-2/3 animate-pulse rounded bg-foreground/20" />
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={endRef} />
         </div>
       </ScrollArea>
 
@@ -68,6 +94,9 @@ export function Assistant() {
             </Button>
           )}
         </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Press Enter to send.
+        </p>
       </form>
     </Card>
   );
