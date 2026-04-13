@@ -14,8 +14,9 @@ This will:
 1. Detect your framework and package manager
 2. Let you choose a chatbot template
 3. Let you choose an AI provider
-4. Install required shadcn components
-5. Generate all necessary files
+4. Let you choose a model, or use the provider's recommended default
+5. Install required shadcn components
+6. Generate all necessary files
 
 ## Prerequisites
 
@@ -53,18 +54,18 @@ Customer support chatbot with predefined tone and quick-reply chips. Optimized f
 
 chatcn supports 12 AI providers:
 
-- **OpenAI** - GPT models (gpt-4o-mini default)
-- **Anthropic (Claude)** - Claude models (claude-sonnet-4-5 default)
+- **OpenAI** - GPT models (gpt-5-mini default)
+- **Anthropic (Claude)** - Claude models (claude-3-5-haiku-latest default)
 - **OpenRouter** - Access to multiple models through one API
-- **Google Gemini** - Gemini models (gemini-2.0-flash default)
-- **AWS Bedrock** - Claude and other models via AWS
-- **Groq** - Fast inference (llama-3.3-70b-versatile default)
-- **Together AI** - Open source models (Llama-3.3-70B default)
+- **Google Gemini** - Gemini models (gemini-2.5-flash-lite default)
+- **AWS Bedrock** - Claude and other models via AWS (anthropic.claude-haiku-4-5-20251001-v1:0 default)
+- **Groq** - Fast inference (meta-llama/llama-4-scout-17b-16e-instruct default)
+- **Together AI** - Open source models (deepseek-ai/DeepSeek-V3.1 default)
 - **Mistral** - Mistral models (mistral-small-latest default)
-- **xAI (Grok)** - Grok models (grok-3-mini default)
+- **xAI (Grok)** - Grok models (grok-4.20-beta-latest-non-reasoning default)
 - **DeepSeek** - DeepSeek models (deepseek-chat default)
-- **Cerebras** - Ultra-fast inference (llama-3.3-70b default)
-- **Fireworks AI** - Fast inference (llama-v3p3-70b-instruct default)
+- **Cerebras** - Ultra-fast inference (gpt-oss-120b default)
+- **Fireworks AI** - Fast inference (accounts/fireworks/models/kimi-k2-thinking default)
 
 ## CLI Flags
 
@@ -88,12 +89,22 @@ npx chatcn init --provider openai
 
 Valid values: `openai`, `anthropic`, `openrouter`, `google`, `aws-bedrock`, `groq`, `together`, `mistral`, `xai`, `deepseek`, `cerebras`, `fireworks`
 
+### --model
+
+Choose the model to write into `lib/llm.ts` and `AI_MODEL`:
+
+```bash
+npx chatcn init --provider openai --model gpt-5.1
+```
+
+If you skip this flag, chatcn uses the provider's recommended default model.
+
 ### --yes
 
 Skip all prompts and use defaults:
 
 ```bash
-npx chatcn init --yes --template chatbot-basic --provider openai
+npx chatcn init --yes --template chatbot-basic --provider openai --model gpt-5-mini
 ```
 
 ### --overwrite
@@ -127,7 +138,7 @@ npx chatcn init
 With flags to skip prompts:
 
 ```bash
-npx chatcn init --template chatbot-ui --provider anthropic --yes
+npx chatcn init --template chatbot-ui --provider anthropic --yes --model claude-3-5-haiku-latest
 ```
 
 ### add
@@ -135,7 +146,7 @@ npx chatcn init --template chatbot-ui --provider anthropic --yes
 Add a chatbot template (same as init, but more explicit):
 
 ```bash
-npx chatcn add --template chatbot-assistant --provider openai
+npx chatcn add --template chatbot-assistant --provider openai --model gpt-5-mini
 ```
 
 ## Supported Frameworks
@@ -158,24 +169,28 @@ After running chatcn, you'll need to set up environment variables for your chose
 
 ```bash
 OPENAI_API_KEY=your_api_key_here
+AI_MODEL=gpt-5-mini
 ```
 
 ### Anthropic
 
 ```bash
 ANTHROPIC_API_KEY=your_api_key_here
+AI_MODEL=claude-3-5-haiku-latest
 ```
 
 ### OpenRouter
 
 ```bash
 OPENROUTER_API_KEY=your_api_key_here
+AI_MODEL=openrouter/auto
 ```
 
 ### Google Gemini
 
 ```bash
 GOOGLE_API_KEY=your_api_key_here
+AI_MODEL=gemini-2.5-flash-lite
 ```
 
 ### AWS Bedrock
@@ -184,6 +199,7 @@ GOOGLE_API_KEY=your_api_key_here
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_access_key_here
 AWS_SECRET_ACCESS_KEY=your_secret_key_here
+AI_MODEL=anthropic.claude-haiku-4-5-20251001-v1:0
 ```
 
 Note: AWS Bedrock requires installing `@aws-sdk/client-bedrock-runtime`:
@@ -196,42 +212,49 @@ npm install @aws-sdk/client-bedrock-runtime
 
 ```bash
 GROQ_API_KEY=your_api_key_here
+AI_MODEL=meta-llama/llama-4-scout-17b-16e-instruct
 ```
 
 ### Together AI
 
 ```bash
 TOGETHER_API_KEY=your_api_key_here
+AI_MODEL=deepseek-ai/DeepSeek-V3.1
 ```
 
 ### Mistral
 
 ```bash
 MISTRAL_API_KEY=your_api_key_here
+AI_MODEL=mistral-small-latest
 ```
 
 ### xAI (Grok)
 
 ```bash
 XAI_API_KEY=your_api_key_here
+AI_MODEL=grok-4.20-beta-latest-non-reasoning
 ```
 
 ### DeepSeek
 
 ```bash
 DEEPSEEK_API_KEY=your_api_key_here
+AI_MODEL=deepseek-chat
 ```
 
 ### Cerebras
 
 ```bash
 CEREBRAS_API_KEY=your_api_key_here
+AI_MODEL=gpt-oss-120b
 ```
 
 ### Fireworks AI
 
 ```bash
 FIREWORKS_API_KEY=your_api_key_here
+AI_MODEL=accounts/fireworks/models/kimi-k2-thinking
 ```
 
 Create a `.env.local` file (Next.js) or `.env` file (other frameworks) in your project root with the appropriate variables.

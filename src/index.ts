@@ -32,7 +32,7 @@ program
   .option('--overwrite', 'Overwrite existing files')
   .option('--template <name>', 'Template name')
   .option('--provider <name>', 'Provider name')
-  .option('--model <name>', 'Model name')
+  .option('--model <name>', 'Model name to use for AI_MODEL')
   .action(handleInit);
 
 program
@@ -40,7 +40,7 @@ program
   .description('Add a chatbot template')
   .option('--template <name>', 'Template name')
   .option('--provider <name>', 'Provider name')
-  .option('--model <name>', 'Model name')
+  .option('--model <name>', 'Model name to use for AI_MODEL')
   .option('--cwd <path>', 'Target directory', process.cwd())
   .option('--yes', 'Skip all prompts')
   .option('--overwrite', 'Overwrite existing files')

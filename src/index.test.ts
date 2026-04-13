@@ -24,6 +24,9 @@ describe('CLI Argument Parsing', () => {
       .option('--cwd <path>', 'Target directory', process.cwd())
       .option('--yes', 'Skip all prompts and use defaults')
       .option('--overwrite', 'Overwrite existing files')
+      .option('--template <name>', 'Template name')
+      .option('--provider <name>', 'Provider name')
+      .option('--model <name>', 'Model name to use for AI_MODEL')
       .action(mockInitAction);
 
     program
@@ -31,6 +34,7 @@ describe('CLI Argument Parsing', () => {
       .description('Add a chatbot template')
       .option('--template <name>', 'Template name')
       .option('--provider <name>', 'Provider name')
+      .option('--model <name>', 'Model name to use for AI_MODEL')
       .option('--cwd <path>', 'Target directory', process.cwd())
       .option('--yes', 'Skip all prompts')
       .option('--overwrite', 'Overwrite existing files')
@@ -51,6 +55,14 @@ describe('CLI Argument Parsing', () => {
       expect(helpText).toContain('Scaffold AI chatbot templates into your shadcn project');
       expect(helpText).toContain('init');
       expect(helpText).toContain('add');
+    });
+
+    it('should include --model in command help', () => {
+      const initCommand = program.commands.find(cmd => cmd.name() === 'init');
+      const addCommand = program.commands.find(cmd => cmd.name() === 'add');
+
+      expect(initCommand?.helpInformation()).toContain('--model');
+      expect(addCommand?.helpInformation()).toContain('--model');
     });
   });
 
@@ -110,6 +122,19 @@ describe('CLI Argument Parsing', () => {
       expect(options.overwrite).toBe(true);
       expect(options.cwd).toBe('/custom');
     });
+
+    it('should accept --template, --provider, and --model flags', async () => {
+      await program.parseAsync(
+        ['init', '--template', 'chatbot-ui', '--provider', 'anthropic', '--model', 'claude-3-5-haiku-latest'],
+        { from: 'user' }
+      );
+
+      expect(mockInitAction).toHaveBeenCalled();
+      const options = mockInitAction.mock.calls[0][0];
+      expect(options.template).toBe('chatbot-ui');
+      expect(options.provider).toBe('anthropic');
+      expect(options.model).toBe('claude-3-5-haiku-latest');
+    });
   });
 
   describe('add command options', () => {
@@ -127,6 +152,14 @@ describe('CLI Argument Parsing', () => {
       expect(mockAddAction).toHaveBeenCalled();
       const options = mockAddAction.mock.calls[0][0];
       expect(options.provider).toBe('openai');
+    });
+
+    it('should accept --model flag', async () => {
+      await program.parseAsync(['add', '--model', 'gpt-5-mini'], { from: 'user' });
+
+      expect(mockAddAction).toHaveBeenCalled();
+      const options = mockAddAction.mock.calls[0][0];
+      expect(options.model).toBe('gpt-5-mini');
     });
 
     it('should accept --cwd flag', async () => {
